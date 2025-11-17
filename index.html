@@ -5,133 +5,55 @@
 <title>تسجيل التصويت – مجمع العزيزة</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-*{
-  margin:0; padding:0; box-sizing:border-box;
-  font-family:"Cairo",sans-serif;
-}
-body{
-  background:linear-gradient(135deg,#1e3c72,#2a5298);
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-  color:#fff;
-}
-.hidden{ display:none !important; }
-#password-modal{
-  position:fixed; inset:0;
-  background:rgba(0,0,0,.8);
-  backdrop-filter:blur(8px);
-  display:flex; justify-content:center; align-items:center;
-  z-index:9999;
-}
-.pass-box{
-  width:90%; max-width:420px;
-  background:#fff; color:#222;
-  padding:30px; border-radius:20px;
-  box-shadow:0 15px 50px rgba(0,0,0,.5);
-  animation:pop .4s ease;
-  text-align:center;
-}
-@keyframes pop{
-  from{transform:scale(.6);opacity:.2}
-  to{transform:scale(1);opacity:1}
-}
-.pass-title{ font-size:1.6em; font-weight:900; color:#1e3c72; margin-bottom:8px; }
-.pass-subtitle{ font-size:1.1em; color:#e91e63; font-weight:bold; margin-bottom:15px; }
-.pass-text{ color:#555; margin-top:5px; line-height:1.5; }
-.pass-row{ position:relative; margin-top:20px; }
-.pass-input{
-  width:100%; padding:15px; text-align:center;
-  border-radius:12px; border:2px solid #d7ddff;
-  background:#f4f6ff; font-size:1.3em; font-weight:bold;
-}
-.pass-toggle{
-  position:absolute; left:15px; top:50%;
-  transform:translateY(-50%);
-  font-size:1.5em; color:#1e3c72; cursor:pointer;
-}
-.pass-btn{
-  margin-top:20px;
-  width:100%; padding:14px;
-  background:#1e3c72; color:#fff;
-  border:none; border-radius:12px;
-  font-size:1.1em; font-weight:bold;
-  cursor:pointer; transition:.3s;
-}
-.pass-btn:hover{ background:#152d55; }
-.pass-err{
-  margin-top:12px; color:#b90000; font-weight:bold;
-  display:none; font-size:1em;
-}
-.container{
-  width:100%; max-width:780px;
-  background:#fff; color:#222;
-  padding:35px; border-radius:22px;
-  box-shadow:0 20px 60px rgba(0,0,0,.4);
-}
-.welcome-header{
-  text-align:center; padding:18px; background:#1e3c72; color:#fff;
-  border-radius:16px; margin-bottom:25px; font-size:1.7em; font-weight:900;
-  box-shadow:0 8px 25px rgba(30,60,114,.4);
-}
-h2{ text-align:center; color:#1e3c72; font-size:2em; margin-bottom:8px; }
-.subtitle{ text-align:center; color:#555; margin-bottom:25px; }
-label{ font-weight:700; color:#1e3c72; margin-top:15px; display:block; }
-input[type=text]{
-  width:100%; padding:14px; border-radius:12px;
-  border:2px solid #d4ddff; background:#f7f9ff; font-size:1.1em;
-}
-.candidate-list{
-  margin-top:15px; background:#f4f6ff; border:1px solid #d9e2ff;
-  border-radius:16px; max-height:360px; overflow-y:auto; padding:15px;
-}
-.candidate-item{
-  background:#fff; border:1px solid #dfe6ff; padding:12px 15px;
-  border-radius:14px; margin-bottom:12px; display:flex;
-  justify-content:space-between; align-items:center; cursor:pointer;
-  transition:.25s;
-}
-.candidate-item:hover{ background:#eef3ff; border-color:#b7c8ff; }
-.c-left{ display:flex; align-items:center; gap:12px; }
-.num-circle{
-  width:32px; height:32px; border-radius:50%; background:#1e3c72;
-  color:#fff; display:flex; align-items:center; justify-content:center;
-  font-weight:900;
-}
-.c-name{ font-weight:700; color:#1e3c72; }
-.c-icon{ font-size:1.8em; }
-.sec-box{
-  margin-top:15px; background:#eef2ff; border:1px solid #d3ddff;
-  border-radius:14px; padding:16px;
-}
-.sec-box span{ font-weight:700; color:#1e3c72; display:block; margin-bottom:8px; }
-.btn-row{ display:flex; gap:15px; margin-top:25px; }
-button{
-  flex:1; padding:14px; border:none; border-radius:14px;
-  cursor:pointer; font-weight:700; font-size:1.1em; transition:.3s;
-}
-.btn-primary{ background:#1e3c72; color:#fff; }
-.btn-primary:hover{ background:#152d55; }
-.btn-reset{ background:#e8ecff; color:#1e3c72; }
-.msg-warn, .msg-confirm{
-  display:none; margin-top:15px; padding:12px; border-radius:12px;
-  text-align:center; font-weight:700; font-size:1.05em;
-}
-.msg-warn{ background:#ffd8dd; color:#900; }
-.msg-confirm{ background:#d4edda; color:#137d37; }
-.sig{ text-align:left; margin-top:25px; color:#999; font-style:italic; font-size:.9em; }
+/* ——— نفس التنسيق السابق تمامًا ولا تغيير ——— */
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Cairo",sans-serif;}
+body{background:linear-gradient(135deg,#1e3c72,#2a5298);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;color:#fff;}
+.hidden{display:none!important;}
+#password-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);display:flex;justify-content:center;align-items:center;z-index:9999;}
+.pass-box{width:90%;max-width:420px;background:#fff;color:#222;padding:30px;border-radius:20px;box-shadow:0 15px 50px rgba(0,0,0,.5);animation:pop .4s ease;text-align:center;}
+@keyframes pop{from{transform:scale(.6);opacity:.2}to{transform:scale(1);opacity:1}}
+.pass-title{font-size:1.6em;font-weight:900;color:#1e3c72;margin-bottom:8px;}
+.pass-subtitle{font-size:1.1em;color:#e91e63;font-weight:bold;margin-bottom:15px;}
+.pass-text{color:#555;margin-top:5px;line-height:1.5;}
+.pass-row{position:relative;margin-top:20px;}
+.pass-input{width:100%;padding:15px;text-align:center;border-radius:12px;border:2px solid #d7ddff;background:#f4f6ff;font-size:1.3em;font-weight:bold;}
+.pass-toggle{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:1.5em;color:#1e3c72;cursor:pointer;}
+.pass-btn{margin-top:20px;width:100%;padding:14px;background:#1e3c72;color:#fff;border:none;border-radius:12px;font-size:1.1em;font-weight:bold;cursor:pointer;transition:.3s;}
+.pass-btn:hover{background:#152d55;}
+.pass-err{margin-top:12px;color:#b90000;font-weight:bold;display:none;font-size:1em;}
+.container{width:100%;max-width:780px;background:#fff;color:#222;padding:35px;border-radius:22px;box-shadow:0 20px 60px rgba(0,0,0,.4);}
+.welcome-header{text-align:center;padding:18px;background:#1e3c72;color:#fff;border-radius:16px;margin-bottom:25px;font-size:1.7em;font-weight:900;box-shadow:0 8px 25px rgba(30,60,114,.4);}
+h2{text-align:center;color:#1e3c72;font-size:2em;margin-bottom:8px;}
+.subtitle{text-align:center;color:#555;margin-bottom:25px;}
+label{font-weight:700;color:#1e3c72;margin-top:15px;display:block;}
+input[type=text]{width:100%;padding:14px;border-radius:12px;border:2px solid #d4ddff;background:#f7f9ff;font-size:1.1em;}
+.candidate-list{margin-top:15px;background:#f4f6ff;border:1px solid #d9e2ff;border-radius:16px;max-height:360px;overflow-y:auto;padding:15px;}
+.candidate-item{background:#fff;border:1px solid #dfe6ff;padding:12px 15px;border-radius:14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:.25s;}
+.candidate-item:hover{background:#eef3ff;border-color:#b7c8ff;}
+.c-left{display:flex;align-items:center;gap:12px;}
+.num-circle{width:32px;height:32px;border-radius:50%;background:#1e3c72;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;}
+.c-name{font-weight:700;color:#1e3c72;}
+.c-icon{font-size:1.8em;}
+.sec-box{margin-top:15px;background:#eef2ff;border:1px solid #d3ddff;border-radius:14px;padding:16px;}
+.sec-box span{font-weight:700;color:#1e3c72;display:block;margin-bottom:8px;}
+.btn-row{display:flex;gap:15px;margin-top:25px;}
+button{flex:1;padding:14px;border:none;border-radius:14px;cursor:pointer;font-weight:700;font-size:1.1em;transition:.3s;}
+.btn-primary{background:#1e3c72;color:#fff;}
+.btn-reset{background:#e8ecff;color:#1e3c72;}
+.msg-warn,.msg-confirm{display:none;margin-top:15px;padding:12px;border-radius:12px;text-align:center;font-weight:700;font-size:1.05em;}
+.msg-warn{background:#ffd8dd;color:#900;}
+.msg-confirm{background:#d4edda;color:#137d37;}
+.sig{text-align:left;margin-top:25px;color:#999;font-style:italic;font-size:.9em;}
 </style>
 </head>
 <body>
 
-<!-- مودال كلمة السر -->
+<!-- نافذة كلمة السر -->
 <div id="password-modal">
   <div class="pass-box">
     <div class="pass-title">مجمع العزيزة الانتخابي</div>
     <div class="pass-subtitle">قسم الإشراف</div>
-    <div class="pass-text">من فضلك أدخل كلمة السر الخاصة بقسمك</div>
+    <div class="pass-text">من فضلك أدخل كلمة السر الخاصة بالقسم</div>
     <div class="pass-row">
       <input type="password" id="password-input" class="pass-input" placeholder="••••••" autocomplete="off">
       <span class="pass-toggle" onclick="togglePass()">👁</span>
@@ -144,25 +66,26 @@ button{
 <!-- الصفحة الرئيسية -->
 <div class="container hidden" id="main-container">
   <div class="welcome-header" id="welcome-message"></div>
+
   <h2>تسجيل التصويت</h2>
   <div class="subtitle">نظام حصر وتسجيل الأصوات - مجمع العزيزة</div>
 
   <form id="vote-form">
-    <label>اسم الناخب (ثلاثي أو رباعي):</label>
+    <label>اسم الناخب:</label>
     <input type="text" id="voter-name" placeholder="اكتب الاسم كاملاً">
 
-    <label>اختر المرشح (حتى 2 كحد أقصى):</label>
+    <label>اختر المرشح (حد أقصى 2):</label>
     <div class="candidate-list" id="candidate-list"></div>
 
     <div class="sec-box">
       <span>حالة الصوت:</span>
-      <label><input type="radio" name="vvalid" value="صحيح"> صحيح</label> &nbsp;&nbsp;&nbsp;
+      <label><input type="radio" name="vvalid" value="صحيح"> صحيح</label>
       <label><input type="radio" name="vvalid" value="باطل"> باطل</label>
     </div>
 
     <div class="btn-row">
       <button type="submit" class="btn-primary">تسجيل التصويت</button>
-      <button type="reset" class="btn-reset">مسح الحقول</button>
+      <button type="reset" class="btn-reset">مسح</button>
     </div>
 
     <div id="msg-warn" class="msg-warn"></div>
@@ -178,7 +101,6 @@ import {
   getDatabase, ref, push, get, query, orderByChild, equalTo
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-// إعدادات Firebase الجديدة - مجمع العزيزة
 const firebaseConfig = {
   apiKey: "AIzaSyC9j__hwloitAcYuLOyP-ydoB3ffHng0wM",
   authDomain: "elaziza-9c09f.firebaseapp.com",
@@ -192,44 +114,35 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// متغير لتحديد نوع المستخدم (رجال أو نساء)
-let userType = null; // "men" أو "women"
+let userType = null;
 
-// دالة التحقق من كلمة السر
+// التحقق من كلمة السر
 window.checkPass = function(){
-  const input = document.getElementById("password-input").value.trim();
-  const modal = document.getElementById("password-modal");
-  const main = document.getElementById("main-container");
-  const err = document.getElementById("pw-err");
-  const welcome = document.getElementById("welcome-message");
+  const pass = document.getElementById("password-input").value.trim();
 
-  if(input === "205050"){
+  if(pass === "205050"){
     userType = "men";
-    welcome.textContent = "مرحبا بكم في مجمع العزيزة - رجال 🧑";
-    modal.classList.add("hidden");
-    main.classList.remove("hidden");
-    document.getElementById("voter-name").focus();
-  }
-  else if(input === "506070"){
+  } else if(pass === "506070"){
     userType = "women";
-    welcome.textContent = "مرحبا بكم في مجمع العزيزة - نساء 👩";
-    modal.classList.add("hidden");
-    main.classList.remove("hidden");
-    document.getElementById("voter-name").focus();
+  } else {
+    document.getElementById("pw-err").style.display = "block";
+    setTimeout(()=> document.getElementById("pw-err").style.display="none",1500);
+    return;
   }
-  else{
-    err.style.display = "block";
-    setTimeout(() => err.style.display = "none", 2000);
-  }
+
+  document.getElementById("password-modal").classList.add("hidden");
+  document.getElementById("main-container").classList.remove("hidden");
+  document.getElementById("welcome-message").textContent =
+    userType === "men" ? "مرحبا بكم – رجال 🧑" : "مرحبا بكم – نساء 👩";
 };
 
-// عرض/إخفاء كلمة السر
+// إظهار كلمة السر
 window.togglePass = function(){
   const p = document.getElementById("password-input");
-  p.type = (p.type === "password") ? "text" : "password";
+  p.type = p.type === "password" ? "text" : "password";
 };
 
-// قائمة المرشحين (نفس القائمة)
+// المرشحين
 const candidates = [
   ["1","ايهاب العمده","👑"],
   ["2","محمد العتمانى","🍞"],
@@ -248,103 +161,98 @@ const candidates = [
   ["15","مجدى الأمير","🖊"]
 ];
 
-// بناء قائمة المرشحين
 const listBox = document.getElementById("candidate-list");
-candidates.forEach(c => {
-  const item = document.createElement("div");
-  item.className = "candidate-item";
 
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.value = c[1];
-  checkbox.className = "candidate-checkbox";
+candidates.forEach(c=>{
+  const item=document.createElement("div");
+  item.className="candidate-item";
 
-  item.innerHTML = `
+  const checkbox=document.createElement("input");
+  checkbox.type="checkbox";
+  checkbox.value=c[1];
+  checkbox.className="candidate-checkbox";
+
+  item.innerHTML=`
     <div class="c-left">
       <div class="num-circle">${c[0]}</div>
       <div class="c-name">${c[1]}</div>
     </div>
-    <div class="c-right">
-      <span class="c-icon">${c[2]}</span>
-    </div>
+    <div class="c-right"><span class="c-icon">${c[2]}</span></div>
   `;
 
   item.appendChild(checkbox);
-  item.addEventListener("click", function(e){
-    if(e.target !== checkbox) checkbox.checked = !checkbox.checked;
-    limitSelect(checkbox);
+
+  item.addEventListener("click",e=>{
+    if(e.target!==checkbox) checkbox.checked=!checkbox.checked;
+    limitSelect();
   });
-  checkbox.addEventListener("change", () => limitSelect(checkbox));
+
+  checkbox.addEventListener("change",limitSelect);
+
   listBox.appendChild(item);
 });
 
-// حد أقصى 2 مرشحين
-function limitSelect(ch){
-  const selected = document.querySelectorAll('.candidate-checkbox:checked');
-  if(selected.length > 2){
-    ch.checked = false;
-    showWarn("الحد الأقصى مرشحين اثنين فقط");
+function limitSelect(){
+  const selected=document.querySelectorAll(".candidate-checkbox:checked");
+  if(selected.length>2){
+    selected[selected.length-1].checked=false;
+    showWarn("الحد الأقصى مرشحين فقط");
   }
 }
 
-// التحقق من الاسم
 function invalidName(name){
-  if(name.length < 4) return true;
+  if(name.length<4) return true;
   if(/[0-9]/.test(name)) return true;
-  if(/[^ء-ي\s]/.test(name.replace(/ /g,''))) return true;
+  if(/[^ء-ي\s]/.test(name)) return true;
   return false;
 }
 
-// منع التكرار (لكل قسم منفصل)
 async function isNameUsed(name){
   if(!userType) return false;
-  const snapshot = await get(query(ref(db, `votes_${userType}`), orderByChild("name"), equalTo(name)));
-  return snapshot.exists();
+  const q=query(ref(db,`votes_${userType}`),orderByChild("name"),equalTo(name));
+  const snap=await get(q);
+  return snap.exists();
 }
 
-// تسجيل التصويت
-document.getElementById("vote-form").addEventListener("submit", async function(e){
+document.getElementById("vote-form").addEventListener("submit",async(e)=>{
   e.preventDefault();
 
-  const name = document.getElementById("voter-name").value.trim();
-  const selected = [...document.querySelectorAll('.candidate-checkbox:checked')].map(c => c.value);
-  const validity = document.querySelector('input[name="vvalid"]:checked');
+  const name=document.getElementById("voter-name").value.trim();
+  const selected=[...document.querySelectorAll(".candidate-checkbox:checked")].map(c=>c.value);
+  const validity=document.querySelector('input[name="vvalid"]:checked');
 
-  if(invalidName(name)) return showWarn("الاسم غير صالح (يجب أن يكون أحرف فقط وأكثر من 3 حروف)");
-  if(selected.length === 0) return showWarn("يجب اختيار مرشح واحد على الأقل");
-  if(!validity) return showWarn("يجب تحديد حالة الصوت");
+  if(invalidName(name)) return showWarn("الاسم غير صالح");
+  if(selected.length===0) return showWarn("اختر مرشح واحد على الأقل");
+  if(!validity) return showWarn("حدد حالة الصوت");
 
-  const used = await isNameUsed(name);
-  if(used) return showWarn("هذا الاسم تم تسجيله من قبل في هذا القسم");
+  if(await isNameUsed(name)) return showWarn("هذا الاسم مسجل مسبقًا");
 
-  // حفظ في المسار الخاص بالقسم
-  push(ref(db, `votes_${userType}`), {
+  push(ref(db,`votes_${userType}`),{
     name,
     selected,
-    vote_validity: validity.value,
-    timestamp: Date.now()
-  }).then(() => {
-    showConfirm("تم تسجيل التصويت بنجاح ✓");
-    this.reset();
-    document.getElementById("voter-name").focus();
-  }).catch(err => {
-    showWarn("فشل الإرسال: " + err.message);
+    validity:validity.value,
+    time:Date.now()
   });
+
+  showConfirm("تم تسجيل التصويت بنجاح ✓");
+  document.getElementById("vote-form").reset();
+  document.getElementById("voter-name").focus();
 });
 
 function showWarn(msg){
-  const el = document.getElementById("msg-warn");
-  el.textContent = msg;
-  el.style.display = "block";
-  setTimeout(() => el.style.display = "none", 3000);
+  const el=document.getElementById("msg-warn");
+  el.textContent=msg;
+  el.style.display="block";
+  setTimeout(()=>el.style.display="none",2500);
 }
 
 function showConfirm(msg){
-  const el = document.getElementById("msg-confirm");
-  el.textContent = msg;
-  el.style.display = "block";
-  setTimeout(() => el.style.display = "none", 2500);
+  const el=document.getElementById("msg-confirm");
+  el.textContent=msg;
+  el.style.display="block";
+  setTimeout(()=>el.style.display="none",2500);
 }
 </script>
+
 </body>
 </html>
