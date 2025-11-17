@@ -5,10 +5,102 @@
   <title>تسجيل التصويت – مجمع العزيزة</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* [نفس التنسيقات كما أرسلتها ولا داعي للتغيير] */
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Cairo",sans-serif;}
+    body{
+      background:linear-gradient(135deg,#1e3c72,#2a5298);
+      min-height:100vh;display:flex;justify-content:center;
+      align-items:center;padding:20px;color:#fff;
+    }
+    .hidden{display:none!important;}
+    #password-modal{
+      position:fixed;inset:0;background:rgba(0,0,0,.8);
+      backdrop-filter:blur(8px);display:flex;justify-content:center;
+      align-items:center;z-index:9999;
+    }
+    .pass-box{
+      width:90%;max-width:420px;background:#fff;color:#222;padding:30px;
+      border-radius:20px;box-shadow:0 15px 50px rgba(0,0,0,.5);
+      animation:pop .4s ease;text-align:center;
+    }
+    @keyframes pop{from{transform:scale(.6);opacity:.2}to{transform:scale(1);opacity:1}}
+    .pass-title{font-size:1.6em;font-weight:900;color:#1e3c72;margin-bottom:8px;}
+    .pass-subtitle{font-size:1.1em;color:#e91e63;font-weight:bold;margin-bottom:15px;}
+    .pass-text{color:#555;margin-top:5px;line-height:1.5;}
+    .pass-row{position:relative;margin-top:20px;}
+    .pass-input{
+      width:100%;padding:15px;text-align:center;border-radius:12px;
+      border:2px solid #d7ddff;background:#f4f6ff;
+      font-size:1.3em;font-weight:bold;
+    }
+    .pass-toggle{
+      position:absolute;left:15px;top:50%;transform:translateY(-50%);
+      font-size:1.5em;color:#1e3c72;cursor:pointer;
+    }
+    .pass-btn{
+      margin-top:20px;width:100%;padding:14px;background:#1e3c72;
+      color:#fff;border:none;border-radius:12px;font-size:1.1em;
+      font-weight:bold;cursor:pointer;transition:.3s;
+    }
+    .pass-btn:hover{background:#152d55;}
+    .pass-err{margin-top:12px;color:#b90000;font-weight:bold;display:none;font-size:1em;}
+    .container{
+      width:100%;max-width:780px;background:#fff;color:#222;padding:35px;
+      border-radius:22px;box-shadow:0 20px 60px rgba(0,0,0,.4);
+    }
+    .welcome-header{
+      text-align:center;padding:18px;background:#1e3c72;color:#fff;
+      border-radius:16px;margin-bottom:25px;font-size:1.7em;font-weight:900;
+      box-shadow:0 8px 25px rgba(30,60,114,.4);
+    }
+    h2{text-align:center;color:#1e3c72;font-size:2em;margin-bottom:8px;}
+    .subtitle{text-align:center;color:#555;margin-bottom:25px;}
+    label{font-weight:700;color:#1e3c72;margin-top:15px;display:block;}
+    input[type=text]{
+      width:100%;padding:14px;border-radius:12px;
+      border:2px solid #d4ddff;background:#f7f9ff;font-size:1.1em;
+    }
+    .candidate-list{
+      margin-top:15px;background:#f4f6ff;border:1px solid #d9e2ff;
+      border-radius:16px;max-height:360px;overflow-y:auto;padding:15px;
+    }
+    .candidate-item{
+      background:#fff;border:1px solid #dfe6ff;padding:12px 15px;
+      border-radius:14px;margin-bottom:12px;display:flex;
+      justify-content:space-between;align-items:center;cursor:pointer;
+      transition:.25s;
+    }
+    .candidate-item:hover{background:#eef3ff;border-color:#b7c8ff;}
+    .c-left{display:flex;align-items:center;gap:12px;}
+    .num-circle{
+      width:32px;height:32px;border-radius:50%;background:#1e3c72;
+      color:#fff;display:flex;align-items:center;justify-content:center;
+      font-weight:900;
+    }
+    .c-name{font-weight:700;color:#1e3c72;}
+    .c-icon{font-size:1.8em;}
+    .sec-box{
+      margin-top:15px;background:#eef2ff;border:1px solid #d3ddff;
+      border-radius:14px;padding:16px;
+    }
+    .sec-box span{font-weight:700;color:#1e3c72;display:block;margin-bottom:8px;}
+    .btn-row{display:flex;gap:15px;margin-top:25px;}
+    button{
+      flex:1;padding:14px;border:none;border-radius:14px;
+      cursor:pointer;font-weight:700;font-size:1.1em;transition:.3s;
+    }
+    .btn-primary{background:#1e3c72;color:#fff;}
+    .btn-reset{background:#e8ecff;color:#1e3c72;}
+    .msg-warn,.msg-confirm{
+      display:none;margin-top:15px;padding:12px;border-radius:12px;
+      text-align:center;font-weight:700;font-size:1.05em;
+    }
+    .msg-warn{background:#ffd8dd;color:#900;}
+    .msg-confirm{background:#d4edda;color:#137d37;}
+    .sig{text-align:left;margin-top:25px;color:#999;font-style:italic;font-size:.9em;}
   </style>
 </head>
 <body>
+
 <!-- نافذة كلمة السر -->
 <div id="password-modal">
   <div class="pass-box">
@@ -104,7 +196,7 @@ window.togglePass = function () {
   p.type = p.type === "password" ? "text" : "password";
 };
 
-// المرشحين (كما هي بدون تعديل)
+// المرشحين
 const candidates = [
   ["1","ايهاب العمده","👑"],
   ["2","محمد العتمانى","🍞"],
