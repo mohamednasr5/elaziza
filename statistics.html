@@ -151,18 +151,20 @@ th,td{padding:12px 10px; border-bottom:1px solid #eef2ff; text-align:right}
   box-shadow:0 4px 15px rgba(0,0,0,.15);
   overflow:hidden;
 }
+
 .marquee-text{
   white-space:nowrap;
   display:inline-block;
-  padding-left:100%;
+  padding-right:100%; /* بدل padding-left */
   font-size:1.25em;
   font-weight:900;
   color:#fff;
-  animation:scrollLeft 18s linear infinite;
+  animation:scrollRight 28s linear infinite;  /* بطء أكثر */
 }
-@keyframes scrollLeft{
-  0%{ transform:translateX(100%); }
-  100%{ transform:translateX(-100%); }
+
+@keyframes scrollRight{
+  0%{ transform:translateX(-100%); }
+  100%{ transform:translateX(100%); }
 }
 
 /* RESPONSIVE */
@@ -269,11 +271,19 @@ th,td{padding:12px 10px; border-bottom:1px solid #eef2ff; text-align:right}
   </div>
 </div>
 
+<!-- نافذة منبثقة لعرض أو تعديل بيانات الناخب -->
+<div id="popup-modal" class="hidden" style="position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6)">
+  <div id="popup-box" style="background:#fff;padding:36px 25px;max-width:400px;width:96%;border-radius:16px;box-shadow:0 12px 48px #0002;color:#333;position:relative;text-align:center">
+    <span style="position:absolute;left:15px;top:15px;font-size:1.7em;cursor:pointer;color:#e91e63" onclick="closePopup()">✕</span>
+    <div id="popup-content"></div>
+  </div>
+</div>
+
 <!-- Firebase + Logic -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { getDatabase, ref, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC9j__hwloitAcYuLOyP-ydoB3ffHng0wM",
@@ -326,7 +336,6 @@ function currentVotes(){
   if(currentView==="women") return votesWomen;
   return [...votesMen,...votesWomen];
 }
-
 function renderAll(){
   const data=currentVotes();
   renderCards(data);
@@ -335,15 +344,105 @@ function renderAll(){
   renderTable(data);
 }
 
+// ========== التعديلات الجديدة على الجدول ==========
+function renderTable(data){
+  const q=(document.getElementById("search").value||"").toLowerCase();
+  const filtered=data.filter(v=>
+    v.name.toLowerCase().includes(q) ||
+    v.selected.some(c=>c.toLowerCase().includes(q))
+  );
+  const tbody=document.getElementById("votes-table");
+  tbody.innerHTML=filtered.map((v,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td>
+        ${v.name}
+        <button onclick="showVoter(${JSON.stringify(v).replace(/"/g,"&quot;")})" style="margin-right:6px;padding:2px 8px;background:#e3e8f6;border-radius:8px;cursor:pointer;font-size:0.93em;border:0">عرض</button>
+        <button onclick="editVoter('${v.id}','${v.section}')" style="padding:2px 8px;margin-right:3px;background:#eee;border-radius:8px;cursor:pointer;font-size:0.93em;border:0">تعديل</button>
+      </td>
+      <td>${v.selected.join(" و ")}</td>
+      <td class="${v.validity==="صحيح"?"status-valid":"status-invalid"}">${v.validity}</td>
+      <td>${new Date(v.timestamp).toLocaleTimeString("ar-EG")}</td>
+      <td class="section-${v.section==="رجال"?"men":"women"}">${v.section}</td>
+    </tr>
+  `).join("");
+  document.getElementById("footer-note").textContent =
+    filtered.length ? `تم عرض ${filtered.length} صوت` : "لا توجد نتائج مطابقة";
+}
+// نافذة العرض للناخب بكل التنبيهات المطلوبة
+window.closePopup = function() {
+  document.getElementById("popup-modal").classList.add("hidden");
+};
+
+window.showVoter = function(voter) {
+  let msg = `<h2 style="color:#1e3c72">تفاصيل الناخب</h2>
+    <div><b>الاسم:</b> ${voter.name}</div>
+    <div><b>المرشحون:</b> ${voter.selected.join("، ") || '<span style="color:#999">---</span>'}</div>
+    <div><b>الوقت:</b> ${new Date(voter.timestamp).toLocaleString("ar-EG")}</div>
+    <div><b>القسم:</b> ${voter.section}</div>`;
+
+  // إشعار "بيدعمنا" للأستاذ البدوي جميز
+  if (voter.selected.includes("البدوى جميز")) {
+    msg += `<div style="background:#d4edda;margin:18px 0;padding:11px;border-radius:12px;color:#137d37;font-weight:700">بيدعمنا</div>`;
+  }
+  // إشعار "بيكرهنا" إذا اختار اثنين وليس بينهم أحمد الحديدى (رقم 3)
+  if (voter.selected.length === 2 && !voter.selected.includes("أحمد الحديدى")) {
+    msg += `<div style="background:#ffd7dd;padding:11px;margin:18px 0;border-radius:12px;color:#b00020;font-weight:700">بيكرهنا</div>`;
+  }
+
+  document.getElementById("popup-content").innerHTML = msg;
+  document.getElementById("popup-modal").classList.remove("hidden");
+};
+
+// نافذة تعديل اختيار المرشحين لأي ناخب
+window.editVoter = async function(voteId, section) {
+  const refPath = section === "رجال" ? "votes_men" : "votes_women";
+  const voteSnap = await get(ref(db, `${refPath}/${voteId}`));
+  if (!voteSnap.exists()) {
+    alert("لا توجد بيانات الناخب المطلوبة"); return;
+  }
+  const data = voteSnap.val();
+  let candidates = [
+    "ايهاب العمده","محمد العتمانى","أحمد الحديدى","عادل الجيار","احمد محمد محمد سمره",
+    "وليد تيسير الامير","كمال العيسوى","البدوى جميز","احمد الريس","أحمد عوف",
+    "حسن الملهاط","عمرو محمد بحيرى","السيد طمان","محمد دندن","مجدى الأمير"
+  ];
+  let html = `<h2 style="color:#1e3c72;font-size:1.2em;">تعديل اختيارات الناخب</h2>
+    <div><b>الاسم:</b> ${data.name}</div>
+    <form id="edit-vote-form" style="margin-top:11px">
+      <div style="text-align:right"><b>حدد المرشحين (حد أقصى 2):</b></div>
+      ${candidates.map(c => `
+        <label style="margin-right:7px">
+          <input type="checkbox" name="selected" value="${c}" ${data.selected && data.selected.includes(c) ? "checked" : ""}>
+          ${c}
+        </label>
+      `).join("<br>")}
+      <div style="margin-top:15px"><button type="submit" style="background:#1565c0;color:white;padding:8px 22px;border-radius:10px;border:none;font-size:1em">حفظ التعديل</button></div>
+    </form>
+    <div id="edit-msg" style="margin-top:10px;font-weight:700;color:#c00"></div>
+  `;
+  document.getElementById("popup-content").innerHTML = html;
+  document.getElementById("popup-modal").classList.remove("hidden");
+  document.getElementById("edit-vote-form").onsubmit = async function(e){
+    e.preventDefault();
+    let sel = Array.from(document.querySelectorAll('#edit-vote-form input[name="selected"]:checked')).map(x=>x.value);
+    if (sel.length < 1 || sel.length > 2) {
+      document.getElementById("edit-msg").textContent = "يجب اختيار 1 إلى 2 مرشح!";
+      return;
+    }
+    await update(ref(db, `${refPath}/${voteId}`), { selected: sel });
+    document.getElementById("edit-msg").textContent = "تم حفظ التعديل بنجاح...";
+    setTimeout(closePopup,1400);
+  };
+};
+
 function renderCards(data){
   const total=data.length;
   const valid=data.filter(v=>v.validity==="صحيح").length;
   const invalid=data.filter(v=>v.validity==="باطل").length;
-
   document.getElementById("total-votes").textContent=total;
   document.getElementById("valid-votes").textContent=valid;
   document.getElementById("invalid-votes").textContent=invalid;
-
   let vpm=0;
   if(total>0 && data[0].timestamp){
     const first=Math.min(...data.map(v=>v.timestamp));
@@ -352,7 +451,6 @@ function renderCards(data){
   }
   document.getElementById("vpm").textContent=vpm;
 }
-
 function renderCharts(data){
   const cand={};
   data.forEach(v=>v.selected.forEach(c=>cand[c]=(cand[c]||0)+1));
@@ -384,15 +482,12 @@ function renderCharts(data){
     chartValidity.update();
   }
 }
-
 function renderRanking(data){
   const cand={};
   data.forEach(v=>v.selected.forEach(c=>cand[c]=(cand[c]||0)+1));
-
   const sorted=Object.entries(cand)
     .map(([name,count])=>({name,count}))
     .sort((a,b)=>b.count-a.count);
-
   const list=document.getElementById("ranking-list");
   list.innerHTML = sorted.length
   ? sorted.map((x,i)=>`
@@ -408,30 +503,6 @@ function renderRanking(data){
     ).join("")
   : "<div style='text-align:center;color:#999;padding:30px'>لا توجد أصوات بعد</div>";
 }
-
-function renderTable(data){
-  const q=(document.getElementById("search").value||"").toLowerCase();
-  const filtered=data.filter(v=>
-    v.name.toLowerCase().includes(q) ||
-    v.selected.some(c=>c.toLowerCase().includes(q))
-  );
-
-  const tbody=document.getElementById("votes-table");
-  tbody.innerHTML=filtered.map((v,i)=>`
-    <tr>
-      <td>${i+1}</td>
-      <td>${v.name}</td>
-      <td>${v.selected.join(" و ")}</td>
-      <td class="${v.validity==="صحيح"?"status-valid":"status-invalid"}">${v.validity}</td>
-      <td>${new Date(v.timestamp).toLocaleTimeString("ar-EG")}</td>
-      <td class="section-${v.section==="رجال"?"men":"women"}">${v.section}</td>
-    </tr>
-  `).join("");
-
-  document.getElementById("footer-note").textContent =
-    filtered.length ? `تم عرض ${filtered.length} صوت` : "لا توجد نتائج مطابقة";
-}
-
 document.querySelectorAll(".toggle-btn").forEach(btn=>{
   btn.onclick=()=>{document.querySelectorAll(".toggle-btn").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
@@ -439,7 +510,6 @@ document.querySelectorAll(".toggle-btn").forEach(btn=>{
     renderAll();
   };
 });
-
 window.exportCSV = () => {
   const data=currentVotes();
   if(!data.length) return alert("لا توجد بيانات");
@@ -453,7 +523,6 @@ window.exportCSV = () => {
   a.download="نتائج_العزيزة.csv";
   a.click();
 };
-
 window.resetAll = () => {
   const pw=prompt("أدخل كلمة سر التصفير الكامل");
   if(pw!=="742018") return alert("خطأ في كلمة السر");
