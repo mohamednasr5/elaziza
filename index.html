@@ -4,10 +4,8 @@
   <meta charset="UTF-8" />
   <title>تسجيل التصويت - العزيزة</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- الخط الافتراضي لمظهر جميل -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
-    /* CSS مرتب: نسق ووضوح */
     *{ margin:0; padding:0; box-sizing:border-box; font-family:"Cairo",sans-serif; }
     body{
       background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
@@ -22,10 +20,7 @@
       box-shadow:0 20px 60px rgba(0,0,0,.3);
       animation:fade .5s ease;
     }
-    @keyframes fade{
-      from{opacity:0; transform:translateY(20px);}
-      to{opacity:1; transform:translateY(0);}
-    }
+    @keyframes fade{ from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
 
     h2{
       text-align:center; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
@@ -33,79 +28,37 @@
       font-size:2.2em; font-weight:900;
     }
 
-    .committee-info{
-      text-align:center; margin-top:12px; margin-bottom:25px;
-      background:linear-gradient(135deg,#f5f7ff 0%,#eff2ff 100%);
-      padding:14px; border-radius:12px; border-left:4px solid #667eea;
-    }
+    .committee-info{ text-align:center; margin-top:12px; margin-bottom:25px; background:linear-gradient(135deg,#f5f7ff 0%,#eff2ff 100%); padding:14px; border-radius:12px; border-left:4px solid #667eea; }
     .committee-name{ font-size:1.1em; font-weight:700; color:#667eea; margin-bottom:4px; }
     .committee-address{ font-size:0.9em; color:#666; font-weight:500; }
 
     label{ font-weight:700; color:#333; margin-top:18px; display:block; }
-    input[type=text]{
-      width:100%; padding:13px 14px; border-radius:12px;
-      border:2px solid #e0e7ff; background:#f8f9ff; font-size:1em; transition:all 0.3s;
-    }
-    input[type=text]:focus{
-      outline:none; border-color:#667eea; box-shadow:0 0 0 3px rgba(102,126,234,0.1);
-    }
+    input[type=text]{ width:100%; padding:13px 14px; border-radius:12px; border:2px solid #e0e7ff; background:#f8f9ff; font-size:1em; transition:all 0.3s; }
+    input[type=text]:focus{ outline:none; border-color:#667eea; box-shadow:0 0 0 3px rgba(102,126,234,0.1); }
 
-    .candidate-list{
-      margin-top:14px; background:#f8f9ff; border:2px solid #e0e7ff;
-      border-radius:14px; max-height:350px; overflow-y:auto; padding:12px;
-    }
-    .candidate-item{
-      background:#fff; border:1px solid #e8ecff; padding:12px;
-      border-radius:12px; margin-bottom:10px;
-      display:flex; justify-content:space-between; align-items:center;
-      transition:all 0.3s; cursor:pointer; border-left:4px solid #667eea;
-    }
-    .candidate-item:hover{ 
-      background:linear-gradient(135deg,#f5f7ff 0%,#eff2ff 100%);
-      border-color:#667eea; box-shadow:0 4px 12px rgba(102,126,234,0.2);
-    }
-    .candidate-item.selected{
-      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-      color:#fff; border-left-color:#fff;
-    }
+    .candidate-list{ margin-top:14px; background:#f8f9ff; border:2px solid #e0e7ff; border-radius:14px; max-height:350px; overflow-y:auto; padding:12px; }
+    .candidate-item{ background:#fff; border:1px solid #e8ecff; padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; transition:all 0.3s; cursor:pointer; border-left:4px solid #667eea; }
+    .candidate-item:hover{ background:linear-gradient(135deg,#f5f7ff 0%,#eff2ff 100%); border-color:#667eea; box-shadow:0 4px 12px rgba(102,126,234,0.2); }
+    .candidate-item.selected{ background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; border-left-color:#fff; }
     .c-left{ display:flex; align-items:center; gap:12px; flex:1; }
-    .num-circle{
-      width:32px; height:32px; border-radius:50%;
-      background:#667eea; color:#fff;
-      display:flex; align-items:center; justify-content:center;
-      font-size:0.95em; font-weight:900;
-    }
-    .candidate-item.selected .num-circle{
-      background:#fff; color:#667eea;
-    }
+    .num-circle{ width:32px; height:32px; border-radius:50%; background:#667eea; color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.95em; font-weight:900; }
+    .candidate-item.selected .num-circle{ background:#fff; color:#667eea; }
     .c-name{ font-weight:700; }
     .c-right{ display:flex; align-items:center; gap:10px; }
     .c-icon{ font-size:1.8em; }
     input[type="checkbox"]{ width:20px; height:20px; cursor:pointer; accent-color:#667eea; }
 
-    .sec-box{
-      margin-top:18px; background:linear-gradient(135deg,#f5f7ff 0%,#eff2ff 100%);
-      border:2px solid #e0e7ff; border-radius:12px; padding:16px;
-    }
+    .sec-box{ margin-top:18px; background:linear-gradient(135deg,#f5f7ff 0%,#eff2ff 100%); border:2px solid #e0e7ff; border-radius:12px; padding:16px; }
     .sec-title{ font-weight:700; color:#667eea; display:block; margin-bottom:12px; font-size:1.05em; }
     .radio-group{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .radio-item{
-      display:flex; align-items:center; gap:8px; cursor:pointer;
-      padding:10px; background:#fff; border-radius:10px;
-      border:2px solid #e0e7ff; transition:all 0.3s;
-    }
+    .radio-item{ display:flex; align-items:center; gap:8px; cursor:pointer; padding:10px; background:#fff; border-radius:10px; border:2px solid #e0e7ff; transition:all 0.3s; }
     .radio-item:hover{ border-color:#667eea; background:#f8f9ff; }
     .radio-item input[type="radio"]{ width:18px; height:18px; cursor:pointer; }
-    .radio-item.selected{
-      background:#667eea; color:#fff; border-color:#667eea;
-    }
+    .radio-item.selected{ background:#667eea; color:#fff; border-color:#667eea; }
     .radio-item.selected input[type="radio"]{ accent-color:#fff; }
 
     .btn-row{ display:flex; gap:12px; margin-top:25px; }
-    button{
-      flex:1; padding:13px; border:none; border-radius:12px;
-      cursor:pointer; font-weight:700; font-size:1.05em; transition:all 0.3s;
-    }
+    button{ flex:1; padding:13px; border:none; border-radius:12px; cursor:pointer; font-weight:700; font-size:1.05em; transition:all 0.3s; }
     .btn-primary{ background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; }
     .btn-primary:hover{ transform:translateY(-2px); }
     .btn-reset{ background:#e0e7ff; color:#667eea; font-weight:700; }
@@ -113,88 +66,30 @@
     .btn-logout{ background:#ffebee; color:#c62828; font-weight:700; }
     .btn-logout:hover{ background:#ffcdd2; }
 
-    .msg-warn, .msg-confirm{
-      display:none; margin-top:15px; padding:13px; border-radius:10px;
-      text-align:center; font-weight:700; animation:slideDown 0.3s ease;
-    }
-    @keyframes slideDown{
-      from{opacity:0; transform:translateY(-10px);}
-      to{opacity:1; transform:translateY(0);}
-    }
+    .msg-warn, .msg-confirm{ display:none; margin-top:15px; padding:13px; border-radius:10px; text-align:center; font-weight:700; animation:slideDown 0.3s ease; }
+    @keyframes slideDown{ from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
     .msg-warn{ background:#ffebee; color:#c62828; border-left:4px solid #c62828; }
     .msg-confirm{ background:#e8f5e9; color:#2e7d32; border-left:4px solid #2e7d32; }
 
-    #bubble{
-      position:fixed; bottom:25px; right:25px;
-      background:#fff; color:#222;
-      padding:16px; border-radius:12px;
-      box-shadow:0 8px 24px rgba(0,0,0,.3);
-      font-size:1em; font-weight:700;
-      display:none; width:320px; max-width:calc(100vw - 50px);
-      animation:slide .4s ease; border-left:4px solid #667eea;
-      z-index:99999;
-    }
-
-    #bubble.active{
-      display:flex;
-      align-items:flex-start;
-      gap:12px;
-    }
-
-    #bubble-icon{
-      font-size:1.6em;
-      min-width:28px;
-      text-align:center;
-      margin-top:2px;
-    }
-
-    #bubble-content{
-      flex:1;
-      line-height:1.5;
-    }
-
-    #bubble-close{
-      background:none;
-      border:none;
-      font-size:1.4em;
-      color:#999;
-      cursor:pointer;
-      padding:0;
-      min-width:28px;
-      text-align:center;
-      transition:all 0.3s;
-      opacity:0.6;
-    }
-
-    #bubble-close:hover{
-      opacity:1;
-      color:#667eea;
-    }
-
-    @keyframes slide{
-      from{transform:translateY(20px);opacity:0;}
-      to{transform:translateY(0);opacity:1;}
-    }
+    #bubble{ position:fixed; bottom:25px; right:25px; background:#fff; color:#222; padding:16px; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.3); font-size:1em; font-weight:700; display:none; width:320px; max-width:calc(100vw - 50px); animation:slide .4s ease; border-left:4px solid #667eea; z-index:99999; }
+    #bubble.active{ display:flex; align-items:flex-start; gap:12px; }
+    #bubble-icon{ font-size:1.6em; min-width:28px; text-align:center; margin-top:2px; }
+    #bubble-content{ flex:1; line-height:1.5; }
+    #bubble-close{ background:none; border:none; font-size:1.4em; color:#999; cursor:pointer; padding:0; min-width:28px; text-align:center; transition:all 0.3s; opacity:0.6; }
+    #bubble-close:hover{ opacity:1; color:#667eea; }
+    @keyframes slide{ from{transform:translateY(20px);opacity:0;} to{transform:translateY(0);opacity:1;} }
 
     .sig{text-align:left; margin-top:25px; color:#999; font-style:italic; font-size:0.85em;}
-
-    @media(max-width:600px){
-      .container{ padding:20px; }
-      h2{ font-size:1.6em; }
-      .radio-group{ grid-template-columns:1fr; }
-      .candidate-list{ max-height:400px; }
-    }
+    @media(max-width:600px){ .container{ padding:20px; } h2{ font-size:1.6em; } .radio-group{ grid-template-columns:1fr; } .candidate-list{ max-height:400px; } }
   </style>
 </head>
 <body>
-<!-- نافذة الإشعارات العائمة -->
 <div id="bubble">
   <div id="bubble-icon">💬</div>
   <div id="bubble-content"></div>
   <button id="bubble-close" onclick="closeBubble()">×</button>
 </div>
 
-<!-- صندوق التصويت الرئيسي -->
 <div class="container" id="main-container">
   <h2 id="welcome-title">تسجيل التصويت - العزيزة</h2>
   <div class="committee-info">
@@ -235,116 +130,114 @@
 
   <div class="sig">
     تم البرمجة بواسطة 
-    <a href="https://www.facebook.com/en.mohamed.nasr" target="_blank" 
-       style="color:#1e3c72; font-weight:900; text-decoration:underline;">
+    <a href="https://www.facebook.com/en.mohamed.nasr" target="_blank" style="color:#1e3c72; font-weight:900; text-decoration:underline;">
        المهندس محمد حماد
     </a>
   </div>
 </div>
 
-<!-- جافاسكريبت موديول: معالج التصويت والفلاش والتنبيهات وقاعدة البيانات -->
 <script type="module">
-// إعداد Firebase وربطه
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js";
+// messaging قد يسبب أخطاء لو لم تقم بإضافة service worker؛ سنحاول استخدامه بشكل مأمون
+let messagingModule = null;
+try {
+  messagingModule = await import("https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js");
+} catch (e) {
+  console.warn("Firebase messaging module not available or blocked:", e);
+}
 
-// إعدادات الاتصال للبيانات والإشعارات (تأكد من التعديل إذا غيرت المشروع)
 const firebaseConfig = {
   apiKey: "AIzaSyCxxXV_6CEo1fTp3rRbfwfYbe7WH0Cyg38",
   authDomain: "elahmadiya.firebaseapp.com",
   databaseURL: "https://elahmadiya-default-rtdb.firebaseio.com",
   projectId: "elahmadiya",
-  storageBucket: "elahmadiya.firebasestorage.app",
+  storageBucket: "elahmadiya.appspot.com", // أصلح الاسم للاحتمال الصحيح
   messagingSenderId: "594580767620",
   appId: "1:594580767620:web:f5be3b87d4c704854e53d1"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const messaging = getMessaging(app);
 
-// مفتاح VAPID لإشعارات الويب (عدل من Firebase Console حسب مشروعك)
+let messaging = null;
 const VAPID_KEY = "BBc4i5tl6yb0Z584Vb5J4n-zHzSEMRZzW-Bh63PFkyJ5nkjx4-3qb3c_gn4BpwnN1ewUD47tx5UWedR06ulmW_o";
+if (messagingModule) {
+  try {
+    messaging = messagingModule.getMessaging(app);
+  } catch (err) {
+    console.warn("Unable to init messaging:", err);
+    messaging = null;
+  }
+}
 
+const MAX_SELECTION = 2;
 let committeeNumber = 0;
 let committeeName = "";
 let closedNotifications = new Set();
 
-// استخراج نوع اللجنة من الرابط
 const urlParams = new URLSearchParams(window.location.search);
 const committeeType = urlParams.get('type');
-
-// حماية الوصول بناءً على النوع المدخل بالرابط (رجال/نساء فقط)
 if(!committeeType || (committeeType !== 'women' && committeeType !== 'men')){
-  window.location.href = 'index.html'; // يمكنك تخصيص صفحة التحويل
+  // بدل التحويل بما يناسبك
+  window.location.href = 'index.html';
 }
 
-// تعيين بيانات اللجنة والصندوق حسب النوع
-if(committeeType === 'women'){
-  committeeNumber = 24;
-  committeeName = "مجمع العزيزة لجنة النساء";
-} else {
-  committeeNumber = 25;
-  committeeName = "مجمع العزيزة لجنة الرجال";
-}
+if(committeeType === 'women'){ committeeNumber = 24; committeeName = "مجمع العزيزة لجنة النساء"; }
+else { committeeNumber = 25; committeeName = "مجمع العزيزة لجنة الرجال"; }
+
 document.getElementById("welcome-title").textContent = "اللجنة " + committeeNumber;
 document.getElementById("committee-name-display").textContent = committeeName;
 document.getElementById("committee-address-display").textContent = "مدرسة مجمع العزيزة الابتدائية";
 
-// طلب إذن الإشعارات وتسجيل FCM Token في قاعدة البيانات
 async function requestNotificationPermission() {
+  if(!messaging) return; // إذا لم نتمكن من تهيئة messaging، نتراجع بهدوء
   try {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
-      const currentToken = await getToken(messaging, { vapidKey: VAPID_KEY });
-      if (currentToken) {
-        saveTokenToDatabase(currentToken);
+      try {
+        const { getToken } = messagingModule;
+        const currentToken = await getToken(messaging, { vapidKey: VAPID_KEY });
+        if (currentToken) saveTokenToDatabase(currentToken);
+      } catch (err) {
+        console.warn("getToken failed:", err);
       }
     }
   } catch (error) {
-    // يمكن إظهار رسالة تنبيه لو احتجت
+    console.warn("Notification permission error:", error);
   }
 }
-// حفظ رمز الإشعار في قاعدة البيانات
 function saveTokenToDatabase(token) {
-  const tokenRef = ref(db, `fcm_tokens/${committeeNumber}/${Date.now()}`);
-  set(tokenRef, {
-    token: token,
-    committee: committeeNumber,
-    timestamp: Date.now()
-  });
+  try {
+    const tokenRef = ref(db, `fcm_tokens/${committeeNumber}/${Date.now()}`);
+    set(tokenRef, { token, committee: committeeNumber, timestamp: Date.now() });
+  } catch (e) { console.warn(e); }
 }
 
-// استقبال الإشعارات الحية
-onMessage(messaging, (payload) => {
-  const notificationTitle = payload.notification?.title || 'إشعار جديد';
-  const notificationBody = payload.notification?.body || 'لديك إشعار جديد';
-  showFloatingNotification(notificationBody, notificationTitle);
-});
-
-// تحميل وحفظ إشعارات تم إغلاقها
-function loadClosedNotifications() {
-  const stored = localStorage.getItem("closedNotifications_aziza");
-  if (stored) {
-    try {
-      closedNotifications = new Set(JSON.parse(stored));
-    } catch (e) {
-      closedNotifications = new Set();
-    }
+// استقبال الرسائل الحية (لو مدعوم)
+if (messaging && messagingModule && messagingModule.onMessage) {
+  try {
+    messagingModule.onMessage(messaging, (payload) => {
+      const notificationTitle = payload.notification?.title || 'إشعار جديد';
+      const notificationBody = payload.notification?.body || 'لديك إشعار جديد';
+      showFloatingNotification(notificationBody, notificationTitle);
+    });
+  } catch (e) {
+    console.warn("onMessage failed:", e);
   }
 }
-function saveClosedNotifications() {
-  try {
-    localStorage.setItem(
-      "closedNotifications_aziza",
-      JSON.stringify(Array.from(closedNotifications))
-    );
-  } catch (e) {}
+
+function loadClosedNotifications(){
+  const stored = localStorage.getItem("closedNotifications_aziza");
+  if(stored){
+    try { closedNotifications = new Set(JSON.parse(stored)); } catch(e){ closedNotifications = new Set(); }
+  }
+}
+function saveClosedNotifications(){
+  try { localStorage.setItem("closedNotifications_aziza", JSON.stringify(Array.from(closedNotifications))); } catch(e){;}
 }
 loadClosedNotifications();
 
-// الاستماع لإشعارات القاعدة
 function setupNotificationListeners(committee){
   try {
     const allNotificationsRef = ref(db, "notifications/all");
@@ -375,10 +268,11 @@ function setupNotificationListeners(committee){
         }
       });
     }
-  } catch(e) {}
+  } catch(e) {
+    console.warn("setupNotificationListeners error:", e);
+  }
 }
 
-// عرض الإشعارات العائمة
 function showFloatingNotification(msg, type){
   const bubble = document.getElementById("bubble");
   const content = document.getElementById("bubble-content");
@@ -387,36 +281,21 @@ function showFloatingNotification(msg, type){
   bubble.dataset.notificationId = notificationId;
   if(closedNotifications.has(notificationId)){ return; }
   content.textContent = msg;
-  if(type.includes("عام") || type.includes("📢")){
-    bubble.style.borderLeft = "4px solid #667eea";
-    icon.textContent = "📢";
-  } else if(type.includes("لجنتك") || type.includes("📩")){
-    bubble.style.borderLeft = "4px solid #11998e";
-    icon.textContent = "📩";
-  } else {
-    bubble.style.borderLeft = "4px solid #ffcc00";
-    icon.textContent = "💬";
-  }
+  if(type.includes("عام") || type.includes("📢")){ bubble.style.borderLeft = "4px solid #667eea"; icon.textContent = "📢"; }
+  else if(type.includes("لجنتك") || type.includes("📩")){ bubble.style.borderLeft = "4px solid #11998e"; icon.textContent = "📩"; }
+  else { bubble.style.borderLeft = "4px solid #ffcc00"; icon.textContent = "💬"; }
   bubble.classList.add("active");
-  setTimeout(() => { if(bubble.classList.contains("active")){ closeBubble(); } }, 10000);
+  setTimeout(() => { if(bubble.classList.contains("active")) closeBubble(); }, 10000);
 }
 window.closeBubble = function(){
   const bubble = document.getElementById("bubble");
   const notificationId = bubble.dataset.notificationId;
-  if(notificationId){
-    closedNotifications.add(notificationId);
-    saveClosedNotifications();
-  }
+  if(notificationId){ closedNotifications.add(notificationId); saveClosedNotifications(); }
   bubble.classList.remove("active");
 };
-// زر تسجيل خروج يعيد المستخدم للصفحة الرئيسية
-window.logout = function(){
-  window.location.href = 'index.html';
-};
+window.logout = function(){ window.location.href = 'index.html'; };
 
-// بدء الاستماع للإشعارات
 setupNotificationListeners(committeeNumber);
-// طلب إذن الإشعارات عند تحميل الصفحة
 requestNotificationPermission();
 
 // --- بيانات المرشحين ---
@@ -437,45 +316,71 @@ const candidates = [
   ["14","محمد دندن","🚁"],
   ["15","مجدى الأمير","🖊"]
 ];
-// بناء قائمة المرشحين
+
 const listBox = document.getElementById("candidate-list");
-candidates.forEach((c,idx) => {
+candidates.forEach((c, idx) => {
   const item = document.createElement("div");
   item.className = "candidate-item";
+
+  // بنية داخلية واضحة: اليسار (رقم + اسم) واليمين (أيقونة + checkbox)
+  const left = document.createElement("div");
+  left.className = "c-left";
+  left.innerHTML = `<div class="num-circle">${c[0]}</div><div class="c-name">${c[1]}</div>`;
+
+  const right = document.createElement("div");
+  right.className = "c-right";
+  right.innerHTML = `<span class="c-icon">${c[2]}</span>`;
+
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.value = c[1];
   checkbox.className = "candidate-checkbox";
-  item.innerHTML = `<div class="c-left"><div class="num-circle">${c[0]}</div><div class="c-name">${c[1]}</div></div><div class="c-right"><span class="c-icon">${c[2]}</span></div>`;
-  item.appendChild(checkbox);
-  item.addEventListener("click", (e) => {
-    if(e.target !== checkbox) checkbox.checked = !checkbox.checked;
-    checkLimit();
+  checkbox.setAttribute("aria-label", `اختر ${c[1]}`);
+
+  // أضف checkbox إلى اليمين بحيث يظهر منطقيًا
+  right.appendChild(checkbox);
+
+  item.appendChild(left);
+  item.appendChild(right);
+
+  // منع تصاعد النقر من الـ checkbox لإحداث سلوك مزدوج
+  checkbox.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+  });
+
+  // عند تغيير حالة الـ checkbox: تطبيق حد الاختيار بأمان
+  checkbox.addEventListener("change", (ev) => {
+    const checkedCount = document.querySelectorAll('.candidate-checkbox:checked').length;
+    if (checkedCount > MAX_SELECTION) {
+      // منع الاختيار الزائد: إلغاء آخر تغيير (الذي هو هذا الـ checkbox)
+      checkbox.checked = false;
+      showWarn(`يمكن اختيار ${MAX_SELECTION === 1 ? 'مرشح واحد' : 'مرشحان'} فقط`);
+    }
     updateStyle();
   });
-  checkbox.addEventListener("change", () => {
-    checkLimit();
+
+  // نسمح بالنقر على العنصر لتغيير حالة الـ checkbox (بس نطبق القواعد)
+  item.addEventListener("click", () => {
+    // إذا هو يحاول التشييك، تأكد من عدم تجاوز الحدّ
+    const checkedCount = document.querySelectorAll('.candidate-checkbox:checked').length;
+    if (!checkbox.checked && checkedCount >= MAX_SELECTION) {
+      showWarn(`يمكن اختيار ${MAX_SELECTION === 1 ? 'مرشح واحد' : 'مرشحان'} فقط`);
+      return;
+    }
+    checkbox.checked = !checkbox.checked;
     updateStyle();
   });
+
   listBox.appendChild(item);
 });
+
 function updateStyle(){
   document.querySelectorAll(".candidate-item").forEach((item) => {
-    if(item.querySelector("input[type='checkbox']").checked) 
-      item.classList.add("selected");
-    else 
-      item.classList.remove("selected");
+    if(item.querySelector("input[type='checkbox']").checked) item.classList.add("selected");
+    else item.classList.remove("selected");
   });
 }
-// تحديد أقصى عدد يُمكن اختياره (مرشحين)
-function checkLimit(){
-  const sel = document.querySelectorAll('.candidate-checkbox:checked');
-  if(sel.length > 2){
-    sel[sel.length - 1].checked = false;
-    showWarn("يمكن اختيار مرشحين فقط");
-    updateStyle();
-  }
-}
+
 function showWarn(msg){
   const el = document.getElementById("msg-warn");
   el.textContent = msg;
@@ -488,14 +393,17 @@ function showConfirm(msg){
   el.style.display = "block";
   setTimeout(() => el.style.display = "none", 3000);
 }
-// تخصيص شكل الاختيار للراديو
-document.querySelectorAll("input[type='radio']").forEach(radio => {
+
+// ربط شكل الـ radio باضافة/ازالة كلاس selected
+document.querySelectorAll(".radio-item input[type='radio']").forEach(radio => {
   radio.addEventListener("change", function(){
     document.querySelectorAll(".radio-item").forEach(item => item.classList.remove("selected"));
-    this.closest(".radio-item").classList.add("selected");
+    const parent = this.closest(".radio-item");
+    if(parent) parent.classList.add("selected");
   });
 });
-// معالجة فورم التسجيل
+
+// معالجة الفورم
 document.getElementById("vote-form").addEventListener("submit", function(e){
   e.preventDefault();
   let name = document.getElementById("voter-name").value.trim();
@@ -519,7 +427,7 @@ document.getElementById("vote-form").addEventListener("submit", function(e){
     updateStyle();
     document.querySelectorAll(".radio-item").forEach(item => item.classList.remove("selected"));
   }).catch(err => {
-    showWarn("❌ خطأ: " + err.message);
+    showWarn("❌ خطأ: " + (err?.message || err));
   });
 });
 </script>
