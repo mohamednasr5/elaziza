@@ -187,22 +187,29 @@ button {
 </style>
 </head>
 <body>
+
+<!-- نافذة الإشعارات -->
 <div id="bubble">
   <div id="bubble-icon">💬</div>
   <div id="bubble-content"></div>
   <button id="bubble-close">×</button>
 </div>
+
 <div class="container" id="main-container">
   <h2 id="welcome-title">تسجيل التصويت - العزيزة</h2>
+
   <div class="committee-info">
     <div class="committee-name" id="committee-name-display">جاري التحميل...</div>
     <div class="committee-address" id="committee-address-display">مدرسة مجمع العزيزة الابتدائية</div>
   </div>
+
   <form id="vote-form">
     <label for="voter-name">اسم الناخب (اختياري):</label>
     <input type="text" id="voter-name" placeholder="اكتب الاسم هنا...">
+
     <label>اختر المرشح (حد أقصى 2):</label>
     <div class="candidate-list" id="candidate-list"></div>
+
     <div class="sec-box">
         <span class="sec-title">حالة الصوت:</span>
         <div class="radio-group">
@@ -216,22 +223,25 @@ button {
             </label>
         </div>
     </div>
+
     <div class="btn-row">
       <button type="submit" class="btn-primary">تسجيل التصويت</button>
       <button type="reset" class="btn-reset">تفريغ</button>
       <button type="button" class="btn-logout">خروج</button>
     </div>
-    <div id="msg-warn" class="msg-warn" style="display:none; color:red; text-align:center; margin-top:10px;"></div>
-    <div id="msg-confirm" class="msg-confirm" style="display:none; color:green; text-align:center; margin-top:10px;"></div>
+
+    <div id="msg-warn" style="display:none; color:red; text-align:center; margin-top:10px;"></div>
+    <div id="msg-confirm" style="display:none; color:green; text-align:center; margin-top:10px;"></div>
   </form>
 </div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js";
 import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-// إعداد Firebase الجديد
+// إعداد Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBmgHAmoZKm2RRXg42KWdQHD4e5hAUtBbc",
   authDomain: "azizaonly-2ab60.firebaseapp.com",
@@ -248,31 +258,23 @@ const db = getDatabase(app);
 const messaging = getMessaging(app);
 const auth = getAuth(app);
 
-// VAPID KEY
-const VAPID_KEY = "BBc4i5tl6yb0Z584Vb5J4n-zHzSEMRZzW-Bh63PFkyJ5nkjx4-3qb3c_gn4BpwnN1ewUD47tx5UWedR06ulmW_o";
+// مفتاح VAPID
+const VAPID_KEY =
+"BBc4i5tl6yb0Z584Vb5J4n-zHzSEMRZzW-Bh63PFkyJ5nkjx4-3qb3c_gn4BpwnN1ewUD47tx5UWedR06ulmW_o";
 
-// ----------- نظام اللجان ------------
+// ----------- نظام اللجان -------------
 let committeeNumber = 0;
 let committeeName = "";
 
-// قراءة نوع اللجنة من الرابط
+// قراءة نوع اللجنة من رابط الصفحة
 const urlParams = new URLSearchParams(window.location.search);
 const committeeType = urlParams.get("type");
 
-// توجيه المستخدم إذا لم يكن هناك نوع لجنة
-if (!committeeType || (committeeType !== "women" && committeeType !== "men")) {
-  console.log("No committee type selected");
-}
-
-let committeeNumber;
-let committeeName;
-
+// تحديد رقم اللجنة حسب طلبك:
 if (committeeType === "men") {
-  // رجال = 24
   committeeNumber = 24;
   committeeName = "مجمع العزيزة - لجنة الرجال";
 } else {
-  // نساء = 25
   committeeNumber = 25;
   committeeName = "مجمع العزيزة - لجنة النساء";
 }
@@ -281,8 +283,7 @@ if (committeeType === "men") {
 document.getElementById("committee-name-display").textContent = committeeName;
 document.getElementById("welcome-title").textContent = "اللجنة رقم " + committeeNumber;
 
-
-// ------------------- نظام الإشعارات --------------------
+// ------------------- الإشعارات --------------------
 async function requestNotificationPermission() {
   try {
     const permission = await Notification.requestPermission();
@@ -309,7 +310,7 @@ onMessage(messaging, (payload) => {
   showFloatingNotification(body, title);
 });
 
-// تشغيل الاستماع للإشعارات
+// الاستماع للإشعارات
 setupNotificationListeners(committeeNumber);
 
 function setupNotificationListeners(committee) {
@@ -319,7 +320,6 @@ function setupNotificationListeners(committee) {
   onValue(allNotificationsRef, (snap) => {
     const data = snap.val();
     if (!data) return;
-
     Object.values(data).forEach((notif) => {
       if (notif.timestamp > lastAll) {
         lastAll = notif.timestamp;
@@ -334,7 +334,6 @@ function setupNotificationListeners(committee) {
   onValue(commRef, (snap) => {
     const data = snap.val();
     if (!data) return;
-
     Object.values(data).forEach((notif) => {
       if (notif.timestamp > lastComm) {
         lastComm = notif.timestamp;
@@ -368,25 +367,26 @@ function showFloatingNotification(msg, type) {
   }, 10000);
 }
 
-// زر إغلاق الفقاعة
 document.getElementById("bubble-close").addEventListener("click", (e) => {
-    e.preventDefault();
-    document.getElementById("bubble").style.display = "none";
+  e.preventDefault();
+  document.getElementById("bubble").style.display = "none";
 });
 
-// زر الخروج - النسخة المحدثة
+// ----------- زر الخروج -----------
 document.querySelector(".btn-logout").addEventListener("click", () => {
-  signOut(auth).then(() => {
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.href = "index.html";
-  }).catch((error) => {
-    alert("تعذر تسجيل الخروج: " + error.message);
-    window.location.href = "index.html";
-  });
+  signOut(auth)
+    .then(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = "index.html";
+    })
+    .catch((error) => {
+      alert("تعذر تسجيل الخروج: " + error.message);
+      window.location.href = "index.html";
+    });
 });
 
-// ----------- قائمة المرشحين -------------
+// ----------- المرشحون -------------
 const candidates = [
   ["1", "ايهاب العمده", "👑"],
   ["2", "محمد العتمانى", "🍞"],
@@ -405,55 +405,62 @@ const candidates = [
   ["15", "مجدى الأمير", "🖊"]
 ];
 
+// عرض المرشحين
 const listBox = document.getElementById("candidate-list");
+
 candidates.forEach((c) => {
   const item = document.createElement("div");
   item.className = "candidate-item";
+
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.value = c[1];
   checkbox.className = "candidate-checkbox";
+
   item.innerHTML = `
-      <div class="c-left" style="display:flex; align-items:center; gap:10px;">
-        <div class="num-circle">${c[0]}</div>
-        <div class="c-name" style="font-weight:bold;">${c[1]}</div>
-      </div>
-      <div class="c-right">
-        <span class="c-icon" style="font-size:1.5em;">${c[2]}</span>
-      </div>
+    <div class="c-left" style="display:flex; align-items:center; gap:10px;">
+      <div class="num-circle">${c[0]}</div>
+      <div class="c-name" style="font-weight:bold;">${c[1]}</div>
+    </div>
+    <div class="c-right">
+      <span class="c-icon" style="font-size:1.5em;">${c[2]}</span>
+    </div>
   `;
+
   item.querySelector(".c-right").appendChild(checkbox);
+
   item.addEventListener("click", (e) => {
-    if (e.target !== checkbox) {
-      checkbox.checked = !checkbox.checked;
-    }
+    if (e.target !== checkbox) checkbox.checked = !checkbox.checked;
     updateSelection();
   });
+
   checkbox.addEventListener("change", updateSelection);
+
   listBox.appendChild(item);
 });
+
 function updateSelection() {
   const checked = document.querySelectorAll(".candidate-checkbox:checked");
   if (checked.length > 2) {
     checked[checked.length - 1].checked = false;
     showWarn("⚠️ يمكنك اختيار مرشحين فقط");
   }
+
   document.querySelectorAll(".candidate-item").forEach((item) => {
     const cb = item.querySelector("input[type='checkbox']");
     if (cb.checked) item.classList.add("selected");
     else item.classList.remove("selected");
   });
 }
-document
-  .querySelectorAll("input[name='vvalid']")
-  .forEach((radio) => {
-    radio.addEventListener("change", () => {
-      document
-        .querySelectorAll(".radio-item")
-        .forEach((x) => x.classList.remove("selected"));
-      radio.closest(".radio-item").classList.add("selected");
-    });
+
+document.querySelectorAll("input[name='vvalid']").forEach((radio) => {
+  radio.addEventListener("change", () => {
+    document.querySelectorAll(".radio-item").forEach((x) => x.classList.remove("selected"));
+    radio.closest(".radio-item").classList.add("selected");
   });
+});
+
+// رسائل التحذير والتأكيد
 function showWarn(msg) {
   const box = document.getElementById("msg-warn");
   box.textContent = msg;
@@ -466,22 +473,27 @@ function showConfirm(msg) {
   box.style.display = "block";
   setTimeout(() => (box.style.display = "none"), 3000);
 }
+
+// حفظ التصويت
 document.getElementById("vote-form").addEventListener("submit", (e) => {
   e.preventDefault();
+
   let voterName = document.getElementById("voter-name").value.trim();
   if (!voterName) voterName = "بدون اسم";
-  const selected = Array.from(
-    document.querySelectorAll(".candidate-checkbox:checked")
-  ).map((x) => x.value);
+
+  const selected = Array.from(document.querySelectorAll(".candidate-checkbox:checked")).map((x) => x.value);
   const validity = document.querySelector("input[name='vvalid']:checked");
+
   if (selected.length < 1) return showWarn("❗ اختر مرشح واحد على الأقل");
   if (!validity) return showWarn("❗ اختر حالة الصوت");
+
   const submitBtn = document.querySelector(".btn-primary");
   submitBtn.disabled = true;
   submitBtn.textContent = "جاري الحفظ...";
+
   const key = Date.now();
-  const path = `votes/aziza/${key}`;
-  const voteRef = ref(db, path);
+  const voteRef = ref(db, `votes/aziza/${key}`);
+
   set(voteRef, {
     name: voterName,
     selected: selected,
@@ -492,12 +504,8 @@ document.getElementById("vote-form").addEventListener("submit", (e) => {
     .then(() => {
       showConfirm("✅ تم الحفظ بنجاح!");
       document.getElementById("vote-form").reset();
-      document
-        .querySelectorAll(".candidate-item")
-        .forEach((x) => x.classList.remove("selected"));
-      document
-        .querySelectorAll(".radio-item")
-        .forEach((x) => x.classList.remove("selected"));
+      document.querySelectorAll(".candidate-item").forEach((x) => x.classList.remove("selected"));
+      document.querySelectorAll(".radio-item").forEach((x) => x.classList.remove("selected"));
     })
     .catch((err) => showWarn("❌ حدث خطأ: " + err.message))
     .finally(() => {
@@ -505,6 +513,7 @@ document.getElementById("vote-form").addEventListener("submit", (e) => {
       submitBtn.textContent = "تسجيل التصويت";
     });
 });
+
 requestNotificationPermission();
 </script>
 </body>
