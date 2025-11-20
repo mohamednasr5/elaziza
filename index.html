@@ -4,184 +4,605 @@
 <meta charset="UTF-8" />
 <title>تسجيل التصويت</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-*{ margin:0; padding:0; box-sizing:border-box; font-family:"Cairo",sans-serif; }
-body{
-  background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-  min-height:100vh; display:flex; justify-content:center; align-items:center;
-  padding:20px; color:#fff;
-}
-.hidden{ display:none !important; }
-
-#password-modal{
-  position:fixed; inset:0; background:rgba(0,0,0,.7); backdrop-filter:blur(10px);
-  display:flex; justify-content:center; align-items:center; z-index:9999;
-}
-.pass-box{
-  width:90%; max-width:400px; background:#fff; color:#222;
-  padding:35px 30px; border-radius:18px; box-shadow:0 20px 60px rgba(0,0,0,.4);
-  animation:pop .4s ease; text-align:center;
-}
-@keyframes pop{ from{transform:scale(.6);opacity:.2} to{transform:scale(1);opacity:1} }
-
-.pass-title{ font-size:1.6em; font-weight:900; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
-.pass-row{ position:relative; margin-top:20px; }
-.pass-input{
-  width:100%; padding:14px 16px; text-align:center;
-  border-radius:12px; border:2px solid #e0e7ff; background:#f8f9ff; font-size:1.1em;
-  transition:all 0.3s;
-}
-.pass-input:focus{
-  outline:none; border-color:#667eea; box-shadow:0 0 0 3px rgba(102,126,234,0.1);
-}
-.pass-toggle{
-  position:absolute; left:15px; top:50%; transform:translateY(-50%);
-  font-size:1.3em; color:#667eea; cursor:pointer; opacity:0.6;
-  transition:all 0.3s;
-}
-.pass-btn{
-  margin-top:20px; width:100%; padding:13px; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-  color:#fff; border:none; border-radius:12px; font-size:1.05em;
-  font-weight:bold; cursor:pointer; transition:all 0.3s;
-}
-.pass-btn:hover{ transform:translateY(-2px); }
-.pass-err{ margin-top:12px; color:#c62828; font-weight:bold; display:none; font-size:0.95em; }
-
-.container{
-  width:100%; max-width:800px; background:#fff; color:#222;
-  padding:35px; border-radius:20px;
-  box-shadow:0 20px 60px rgba(0,0,0,.3);
-  animation:fade .5s ease;
-}
-@keyframes fade{
-  from{opacity:0; transform:translateY(20px);}
-  to{opacity:1; transform:translateY(0);}
+:root {
+    --primary: #667eea;
+    --primary-dark: #5a6fd8;
+    --secondary: #764ba2;
+    --danger: #c62828;
+    --success: #2e7d32;
+    --warning: #f57c00;
+    --light: #f8f9ff;
+    --dark: #222;
+    --gray-100: #f5f5f5;
+    --gray-200: #eeeeee;
+    --gray-300: #e0e0e0;
+    --gray-400: #bdbdbd;
+    --gray-500: #9e9e9e;
+    --gray-600: #757575;
+    --gray-700: #616161;
+    --gray-800: #424242;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    --shadow-md: 0 3px 6px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.12);
+    --shadow-lg: 0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.10);
+    --shadow-xl: 0 15px 25px rgba(0,0,0,0.15), 0 5px 10px rgba(0,0,0,0.05);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
 }
 
-h2{
-  text-align:center; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  font-size:2.2em; font-weight:900;
-}
-.committee-info{
-  text-align:center; margin-top:12px; margin-bottom:25px;
-  background:linear-gradient(135deg,#f5f7ff 0%,#eff2ff 100%);
-  padding:14px; border-radius:12px; border-left:4px solid #667eea;
-}
-.committee-name{
-  font-size:1.1em; font-weight:700; color:#667eea; margin-bottom:4px;
-}
-.committee-address{
-  font-size:0.9em; color:#666; font-weight:500;
-}
-.subtitle{text-align:center; color:#999; margin-top:8px; margin-bottom:25px; font-size:0.95em;}
-
-label{ font-weight:700; color:#333; margin-top:18px; display:block; }
-input[type=text]{
-  width:100%; padding:13px 14px; border-radius:12px;
-  border:2px solid #e0e7ff; background:#f8f9ff; font-size:1em; transition:all 0.3s;
-}
-input[type=text]:focus{
-  outline:none; border-color:#667eea; box-shadow:0 0 0 3px rgba(102,126,234,0.1);
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: "Cairo", sans-serif; 
 }
 
-.candidate-list{
-  margin-top:14px; background:#f8f9ff; border:2px solid #e0e7ff;
-  border-radius:14px; max-height:350px; overflow-y:auto; padding:12px;
+body {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #fff;
 }
-.candidate-item{
-  background:#fff; border:1px solid #e8ecff; padding:12px;
-  border-radius:12px; margin-bottom:10px;
-  display:flex; justify-content:space-between; align-items:center;
-  transition:all 0.3s; cursor:pointer; border-left:4px solid #667eea;
-}
-.candidate-item:hover{ 
-  background:linear-gradient(135deg,#f5f7ff 0%,#eff2ff 100%);
-  border-color:#667eea; box-shadow:0 4px 12px rgba(102,126,234,0.2);
-}
-.candidate-item.selected{
-  background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-  color:#fff; border-left-color:#fff;
-}
-.c-left{ display:flex; align-items:center; gap:12px; flex:1; }
-.num-circle{
-  width:32px; height:32px; border-radius:50%;
-  background:#667eea; color:#fff;
-  display:flex; align-items:center; justify-content:center;
-  font-size:0.95em; font-weight:900;
-}
-.candidate-item.selected .num-circle{
-  background:#fff; color:#667eea;
-}
-.c-name{ font-weight:700; }
-.c-right{ display:flex; align-items:center; gap:10px; }
-.c-icon{ font-size:1.8em; }
-input[type="checkbox"]{ width:20px; height:20px; cursor:pointer; accent-color:#667eea; }
 
-.sec-box{
-  margin-top:18px; background:linear-gradient(135deg,#f5f7ff 0%,#eff2ff 100%);
-  border:2px solid #e0e7ff; border-radius:12px; padding:16px;
+.hidden { 
+    display: none !important; 
 }
-.sec-title{ font-weight:700; color:#667eea; display:block; margin-bottom:12px; font-size:1.05em; }
-.radio-group{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.radio-item{
-  display:flex; align-items:center; gap:8px; cursor:pointer;
-  padding:10px; background:#fff; border-radius:10px;
-  border:2px solid #e0e7ff; transition:all 0.3s;
-}
-.radio-item:hover{ border-color:#667eea; background:#f8f9ff; }
-.radio-item input[type="radio"]{ width:18px; height:18px; cursor:pointer; }
-.radio-item.selected{
-  background:#667eea; color:#fff; border-color:#667eea;
-}
-.radio-item.selected input[type="radio"]{ accent-color:#fff; }
 
-.btn-row{ display:flex; gap:12px; margin-top:25px; }
-button{
-  flex:1; padding:13px; border:none; border-radius:12px;
-  cursor:pointer; font-weight:700; font-size:1.05em; transition:all 0.3s;
+/* شاشة كلمة المرور */
+#password-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
 }
-.btn-primary{ background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; }
-.btn-primary:hover{ transform:translateY(-2px); }
-.btn-reset{ background:#e0e7ff; color:#667eea; font-weight:700; }
-.btn-reset:hover{ background:#d3ddff; }
 
-.msg-warn, .msg-confirm{
-  display:none; margin-top:15px; padding:13px; border-radius:10px;
-  text-align:center; font-weight:700; animation:slideDown 0.3s ease;
+.pass-box {
+    width: 90%;
+    max-width: 400px;
+    background: #fff;
+    color: var(--dark);
+    padding: 35px 30px;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    animation: pop 0.4s ease;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.2);
 }
-@keyframes slideDown{
-  from{opacity:0; transform:translateY(-10px);}
-  to{opacity:1; transform:translateY(0);}
-}
-.msg-warn{ background:#ffebee; color:#c62828; border-left:4px solid #c62828; }
-.msg-confirm{ background:#e8f5e9; color:#2e7d32; border-left:4px solid #2e7d32; }
 
-#bubble{
-  position:fixed; bottom:25px; right:25px;
-  background:#fff; color:#222;
-  padding:16px; border-radius:12px;
-  box-shadow:0 8px 24px rgba(0,0,0,.3);
-  font-size:1em; font-weight:700;
-  display:none; width:320px; max-width:calc(100vw - 50px);
-  animation:slide .4s ease; border-left:4px solid #667eea;
-  z-index:99999;
+@keyframes pop { 
+    from { transform: scale(0.6); opacity: 0.2; } 
+    to { transform: scale(1); opacity: 1; } 
 }
-#bubble.active{ display:flex; gap:12px; }
-#bubble-icon{ font-size:1.6em; min-width:28px; }
-#bubble-content{ flex:1; }
-#bubble-close{
-  background:none; border:none; font-size:1.4em; cursor:pointer; opacity:.6;
+
+.pass-title { 
+    font-size: 1.6em; 
+    font-weight: 900; 
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
 }
-#bubble-close:hover{ opacity:1; color:#667eea; }
 
-.sig{text-align:left; margin-top:25px; color:#999; font-style:italic; font-size:0.85em;}
+.pass-row { 
+    position: relative; 
+    margin-top: 20px; 
+}
 
-@media(max-width:600px){
-  .container{ padding:20px; }
-  h2{ font-size:1.6em; }
-  .radio-group{ grid-template-columns:1fr; }
-  .candidate-list{ max-height:400px; }
+.pass-input {
+    width: 100%;
+    padding: 14px 16px;
+    text-align: center;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--gray-300);
+    background: var(--light);
+    font-size: 1.1em;
+    transition: all 0.3s;
+}
+
+.pass-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.pass-toggle {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.3em;
+    color: var(--primary);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: all 0.3s;
+}
+
+.pass-toggle:hover {
+    opacity: 1;
+}
+
+.pass-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1.05em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: var(--shadow-md);
+}
+
+.pass-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.pass-err {
+    margin-top: 12px;
+    color: var(--danger);
+    font-weight: bold;
+    display: none;
+    font-size: 0.95em;
+}
+
+/* الحاوية الرئيسية */
+.container {
+    width: 100%;
+    max-width: 800px;
+    background: #fff;
+    color: var(--dark);
+    padding: 35px;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    animation: fade 0.5s ease;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+@keyframes fade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    text-align: center;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2.2em;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.committee-info {
+    text-align: center;
+    margin-top: 12px;
+    margin-bottom: 25px;
+    background: linear-gradient(135deg, #f5f7ff 0%, #eff2ff 100%);
+    padding: 14px;
+    border-radius: var(--radius-md);
+    border-right: 4px solid var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.committee-name {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.committee-address {
+    font-size: 0.9em;
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--gray-500);
+    margin-top: 8px;
+    margin-bottom: 25px;
+    font-size: 0.95em;
+}
+
+label {
+    font-weight: 700;
+    color: var(--gray-700);
+    margin-top: 18px;
+    display: block;
+}
+
+input[type=text] {
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--gray-300);
+    background: var(--light);
+    font-size: 1em;
+    transition: all 0.3s;
+}
+
+input[type=text]:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* قائمة المرشحين */
+.candidate-list {
+    margin-top: 14px;
+    background: var(--light);
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    max-height: 350px;
+    overflow-y: auto;
+    padding: 12px;
+    box-shadow: var(--shadow-sm) inset;
+}
+
+.candidate-item {
+    background: #fff;
+    border: 1px solid #e8ecff;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s;
+    cursor: pointer;
+    border-right: 4px solid var(--primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.candidate-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 0;
+}
+
+.candidate-item:hover {
+    background: linear-gradient(135deg, #f5f7ff 0%, #eff2ff 100%);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.candidate-item.selected {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: #fff;
+    border-right-color: #fff;
+}
+
+.candidate-item.selected::before {
+    opacity: 1;
+}
+
+.c-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.num-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95em;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+.candidate-item.selected .num-circle {
+    background: #fff;
+    color: var(--primary);
+}
+
+.c-name {
+    font-weight: 700;
+}
+
+.c-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.c-icon {
+    font-size: 1.8em;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary);
+    position: relative;
+    z-index: 1;
+}
+
+/* مربع حالة الصوت */
+.sec-box {
+    margin-top: 18px;
+    background: linear-gradient(135deg, #f5f7ff 0%, #eff2ff 100%);
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.sec-title {
+    font-weight: 700;
+    color: var(--primary);
+    display: block;
+    margin-bottom: 12px;
+    font-size: 1.05em;
+}
+
+.radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 10px;
+    background: #fff;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--gray-300);
+    transition: all 0.3s;
+}
+
+.radio-item:hover {
+    border-color: var(--primary);
+    background: var(--light);
+}
+
+.radio-item.selected {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+.radio-item.selected input[type="radio"] {
+    accent-color: #fff;
+}
+
+.radio-item input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* أزرار التحكم */
+.btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+button {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.05em;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: #fff;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-reset {
+    background: var(--gray-200);
+    color: var(--primary);
+    font-weight: 700;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-reset:hover {
+    background: var(--gray-300);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* الرسائل */
+.msg-warn, .msg-confirm {
+    display: none;
+    margin-top: 15px;
+    padding: 13px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    font-weight: 700;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.msg-warn {
+    background: #ffebee;
+    color: var(--danger);
+    border-right: 4px solid var(--danger);
+}
+
+.msg-confirm {
+    background: #e8f5e9;
+    color: var(--success);
+    border-right: 4px solid var(--success);
+}
+
+/* الفقاعة */
+#bubble {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #fff;
+    color: var(--dark);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    font-size: 1em;
+    font-weight: 700;
+    display: none;
+    width: 320px;
+    max-width: calc(100vw - 50px);
+    animation: slide 0.4s ease;
+    border-right: 4px solid var(--primary);
+    z-index: 99999;
+}
+
+#bubble.active {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+#bubble-icon {
+    font-size: 1.6em;
+    min-width: 28px;
+}
+
+#bubble-content {
+    flex: 1;
+}
+
+#bubble-close {
+    background: none;
+    border: none;
+    font-size: 1.4em;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: all 0.2s;
+}
+
+#bubble-close:hover {
+    opacity: 1;
+    color: var(--primary);
+}
+
+.sig {
+    text-align: left;
+    margin-top: 25px;
+    color: var(--gray-500);
+    font-style: italic;
+    font-size: 0.85em;
+}
+
+.sig a {
+    color: var(--primary);
+    font-weight: 900;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.sig a:hover {
+    color: var(--secondary);
+    text-decoration: underline;
+}
+
+/* التجاوب */
+@media (max-width: 768px) {
+    .container {
+        padding: 25px 20px;
+    }
+    
+    h2 {
+        font-size: 1.8em;
+    }
+    
+    .radio-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .candidate-list {
+        max-height: 400px;
+    }
+    
+    .btn-row {
+        flex-direction: column;
+    }
+    
+    .candidate-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .c-right {
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 20px 15px;
+    }
+    
+    h2 {
+        font-size: 1.6em;
+    }
+    
+    .pass-box {
+        padding: 25px 20px;
+    }
+    
+    .committee-info {
+        padding: 12px;
+    }
 }
 </style>
 </head>
@@ -189,58 +610,60 @@ button{
 <body>
 
 <div id="bubble">
-  <div id="bubble-icon">💬</div>
-  <div id="bubble-content"></div>
-  <button id="bubble-close" onclick="closeBubble()">×</button>
+    <div id="bubble-icon">💬</div>
+    <div id="bubble-content"></div>
+    <button id="bubble-close" onclick="closeBubble()">×</button>
 </div>
 
 <div id="password-modal">
-  <div class="pass-box">
-    <div class="pass-title">تسجيل الدخول</div>
-    <div class="pass-row">
-      <input type="password" id="password-input" class="pass-input" placeholder="ادخل كلمة السر">
-      <span class="pass-toggle" onclick="togglePass()">👁</span>
+    <div class="pass-box">
+        <div class="pass-title"><i class="fas fa-lock"></i> تسجيل الدخول</div>
+        <p style="color:#666; margin-bottom:15px;">أدخل كلمة المرور للوصول لنظام التصويت</p>
+        <div class="pass-row">
+            <input type="password" id="password-input" class="pass-input" placeholder="ادخل كلمة السر">
+            <span class="pass-toggle" onclick="togglePass()"><i class="fas fa-eye"></i></span>
+        </div>
+        <button class="pass-btn" onclick="checkPass()"><i class="fas fa-sign-in-alt"></i> دخول</button>
+        <div id="pw-err" class="pass-err"><i class="fas fa-exclamation-circle"></i> كلمة السر غير صحيحة</div>
     </div>
-    <button class="pass-btn" onclick="checkPass()">دخول</button>
-    <div id="pw-err" class="pass-err">كلمة السر غير صحيحة</div>
-  </div>
 </div>
 
 <div class="container hidden" id="main-container">
-  <h2 id="welcome-title">تسجيل التصويت</h2>
-  <div class="committee-info">
-    <div class="committee-name" id="committee-name-display"></div>
-    <div class="committee-address" id="committee-address-display"></div>
-  </div>
-
-  <form id="vote-form">
-    <label>اسم الناخب:</label>
-    <input type="text" id="voter-name" placeholder="اكتب اسم الناخب (اختياري)">
-
-    <label>اختر المرشح (حتى 2):</label>
-    <div class="candidate-list" id="candidate-list"></div>
-
-    <div class="sec-box">
-      <span class="sec-title">حالة الصوت:</span>
-      <div class="radio-group">
-        <label class="radio-item"><input type="radio" name="vvalid" value="صحيح"><span>✓ صحيح</span></label>
-        <label class="radio-item"><input type="radio" name="vvalid" value="باطل"><span>✗ باطل</span></label>
-      </div>
+    <h2 id="welcome-title"><i class="fas fa-vote-yea"></i> تسجيل التصويت</h2>
+    <div class="committee-info">
+        <div class="committee-name" id="committee-name-display"></div>
+        <div class="committee-address" id="committee-address-display"></div>
     </div>
+    <p class="subtitle">اختر مرشحيك (حتى مرشحين) ثم حدد حالة الصوت</p>
 
-    <div class="btn-row">
-      <button type="submit" class="btn-primary">تسجيل التصويت</button>
-      <button type="reset" class="btn-reset">إعادة ضبط</button>
+    <form id="vote-form">
+        <label><i class="fas fa-user"></i> اسم الناخب:</label>
+        <input type="text" id="voter-name" placeholder="اكتب اسم الناخب (اختياري)">
+
+        <label><i class="fas fa-users"></i> اختر المرشح (حتى 2):</label>
+        <div class="candidate-list" id="candidate-list"></div>
+
+        <div class="sec-box">
+            <span class="sec-title"><i class="fas fa-check-circle"></i> حالة الصوت:</span>
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="vvalid" value="صحيح"><span><i class="fas fa-check"></i> صحيح</span></label>
+                <label class="radio-item"><input type="radio" name="vvalid" value="باطل"><span><i class="fas fa-times"></i> باطل</span></label>
+            </div>
+        </div>
+
+        <div class="btn-row">
+            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> تسجيل التصويت</button>
+            <button type="reset" class="btn-reset"><i class="fas fa-redo"></i> إعادة ضبط</button>
+        </div>
+
+        <div id="msg-warn" class="msg-warn"></div>
+        <div id="msg-confirm" class="msg-confirm"></div>
+    </form>
+
+    <div class="sig">
+        تم البرمجة بواسطة 
+        <a href="https://www.facebook.com/en.mohamed.nasr" target="_blank">المهندس محمد حماد</a>
     </div>
-
-    <div id="msg-warn" class="msg-warn"></div>
-    <div id="msg-confirm" class="msg-confirm"></div>
-  </form>
-
-  <div class="sig">
-    تم البرمجة بواسطة 
-    <a href="https://www.facebook.com/en.mohamed.nasr" target="_blank" style="color:#1e3c72; font-weight:900;">المهندس محمد حماد</a>
-  </div>
 </div>
 
 <script type="module">
@@ -263,7 +686,16 @@ const db = getDatabase(app);
 
 window.togglePass = function(){
   const p = document.getElementById("password-input");
-  p.type = (p.type === "password") ? "text" : "password";
+  const icon = document.querySelector('.pass-toggle i');
+  if (p.type === "password") {
+    p.type = "text";
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+  } else {
+    p.type = "password";
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
 };
 
 let committeeNumber = 0;
@@ -424,6 +856,64 @@ document.getElementById("vote-form").addEventListener("submit",(e)=>{
   });
 
 });
+
+// إضافة تأثيرات للراديو
+document.querySelectorAll('.radio-item').forEach(item => {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.radio-item').forEach(i => i.classList.remove('selected'));
+    this.classList.add('selected');
+    const radio = this.querySelector('input[type="radio"]');
+    radio.checked = true;
+  });
+});
+
+// إعادة تعيين النمط عند إعادة ضبط النموذج
+document.getElementById("vote-form").addEventListener("reset", function() {
+  setTimeout(() => {
+    updateStyle();
+    document.querySelectorAll('.radio-item').forEach(i => i.classList.remove('selected'));
+  }, 10);
+});
+
+// فقاعة الإشعارات
+window.closeBubble = function() {
+  document.getElementById("bubble").classList.remove("active");
+}
+
+// الاستماع للإشعارات
+const notificationsRef24 = ref(db, 'notifications/committee_24');
+onValue(notificationsRef24, (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    const latestKey = Object.keys(data).pop();
+    const latestMsg = data[latestKey].message;
+    if (committeeNumber === 24 || committeeNumber === 0) {
+      showBubble(latestMsg);
+    }
+  }
+});
+
+const notificationsRef25 = ref(db, 'notifications/committee_25');
+onValue(notificationsRef25, (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    const latestKey = Object.keys(data).pop();
+    const latestMsg = data[latestKey].message;
+    if (committeeNumber === 25 || committeeNumber === 0) {
+      showBubble(latestMsg);
+    }
+  }
+});
+
+function showBubble(msg) {
+  const bubble = document.getElementById("bubble");
+  const content = document.getElementById("bubble-content");
+  content.textContent = msg;
+  bubble.classList.add("active");
+  setTimeout(() => {
+    bubble.classList.remove("active");
+  }, 5000);
+}
 
 </script>
 </body>
