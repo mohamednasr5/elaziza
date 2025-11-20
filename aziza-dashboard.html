@@ -6,217 +6,108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-    :root {
-        --primary: #11998e;
-        --secondary: #38ef7d;
-        --danger: #eb3349;
-        --warning: #f6ad55;
-        --info: #63b3ed;
-        --dark: #1a202c;
-        --light: #f7fafc;
-        --card-bg: #ffffff;
-        --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Cairo", sans-serif; outline: none; }
-    
-    body {
-        background: #f0f2f5;
-        color: var(--dark);
-        min-height: 100vh;
-        padding-bottom: 50px;
-        font-size: 14px;
-    }
-
-    /* --- Lock Screen --- */
-    #lock-screen {
-        position: fixed; inset: 0;
-        background: linear-gradient(135deg, var(--primary), var(--dark));
-        display: flex; justify-content: center; align-items: center;
-        z-index: 10000;
-        padding: 20px;
-    }
-
-    .lock-box {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 40px; width: 100%; max-width: 400px;
-        border-radius: 24px; text-align: center;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(10px);
-    }
-
-    .lock-box h2 { color: var(--primary); margin-bottom: 10px; font-size: 1.8rem; }
-    .lock-input-group { position: relative; margin: 20px 0; }
-    
-    .lock-box input {
-        width: 100%; padding: 15px; border-radius: 12px;
-        border: 2px solid #e2e8f0; font-size: 1.1rem; text-align: center;
-        transition: 0.3s;
-    }
-    .lock-box input:focus { border-color: var(--primary); }
-    
-    .lock-btn {
-        width: 100%; padding: 15px;
-        background: linear-gradient(90deg, var(--primary), var(--secondary));
-        color: white; border: none; border-radius: 12px;
-        font-size: 1.1rem; font-weight: bold; cursor: pointer;
-        transition: transform 0.2s;
-    }
-    .lock-btn:active { transform: scale(0.98); }
-
-    /* --- Dashboard --- */
-    .hidden { display: none !important; }
-    .container { max-width: 1400px; margin: auto; padding: 15px; }
-
-    /* Header */
-    .header {
-        display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
-        gap: 15px; margin-bottom: 25px; background: var(--card-bg);
-        padding: 20px; border-radius: 16px; box-shadow: var(--shadow);
-    }
-    .header-title h1 { font-size: 1.5rem; font-weight: 900; background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .header-badges { display: flex; gap: 10px; align-items: center; }
-    
-    .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-    .badge-admin { background: #e2e8f0; color: var(--dark); }
-    .badge-live { background: #def7ec; color: #03543f; }
-    .dot { width: 8px; height: 8px; background: #38ef7d; border-radius: 50%; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-
-    /* Stats Cards */
-    .grid-cards { 
-        display: grid; 
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 15px; 
-        margin-bottom: 30px; 
-    }
-    .stat-card {
-        background: var(--card-bg); padding: 20px; border-radius: 16px;
-        box-shadow: var(--shadow); border-bottom: 4px solid var(--primary);
-        transition: transform 0.2s;
-        display: flex; flex-direction: column; justify-content: space-between;
-    }
-    .stat-card:hover { transform: translateY(-5px); }
-    .stat-title { color: #718096; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
-    .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--dark); }
-    .stat-sub { font-size: 0.75rem; color: #a0aec0; margin-top: 5px; }
-
-    /* Layout Grid */
-    .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; margin-bottom: 30px; }
-    
-    /* Panels */
-    .panel { background: var(--card-bg); padding: 20px; border-radius: 16px; box-shadow: var(--shadow); height: 100%; display: flex; flex-direction: column; }
-    .panel h3 { margin-bottom: 15px; font-size: 1.1rem; color: var(--primary); border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
-    canvas { width: 100% !important; height: auto !important; max-height: 300px; }
-
-    /* Committee Actions */
-    .comm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    .comm-box {
-        padding: 15px; border-radius: 12px; background: #f7fafc; border: 1px solid #e2e8f0;
-        cursor: pointer; transition: 0.3s;
-    }
-    .comm-box:hover { background: var(--primary); color: white; border-color: var(--primary); }
-    .comm-box h4 { font-size: 1rem; margin-bottom: 5px; }
-    .comm-stats { font-size: 0.8rem; opacity: 0.8; }
-
-    /* Notify Section */
-    .notify-area textarea {
-        width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px;
-        resize: none; height: 80px; margin-bottom: 10px; transition: 0.3s;
-    }
-    .notify-area textarea:focus { border-color: var(--primary); }
-    .notify-options { display: flex; gap: 15px; margin-bottom: 10px; }
-    
-    /* Table Section */
-    .table-controls { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-    .search-box { flex: 1; padding: 10px 15px; border-radius: 10px; border: 1px solid #cbd5e0; min-width: 200px; }
-    .btn-action { padding: 10px 15px; border: none; border-radius: 10px; cursor: pointer; color: white; font-weight: bold; font-size: 0.85rem; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
-    .btn-blue { background: #4299e1; }
-    .btn-green { background: #48bb78; }
-    .btn-red { background: #f56565; }
-    .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
-
-    .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid #e2e8f0; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; min-width: 650px; }
-    thead { background: #f7fafc; }
-    th, td { padding: 12px; text-align: right; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; }
-    th { color: #4a5568; white-space: nowrap; }
-    tr:hover { background: #f8fff9; }
-    
-    .status-ok { color: var(--primary); font-weight: bold; background: #e6fffa; padding: 4px 8px; border-radius: 6px; white-space: nowrap; font-size: 0.8rem; }
-    .status-bad { color: var(--danger); font-weight: bold; background: #fff5f5; padding: 4px 8px; border-radius: 6px; white-space: nowrap; font-size: 0.8rem; }
-
-    /* Ranking List */
-    .ranking-item { 
-        display: flex; justify-content: space-between; align-items: center; padding: 10px;
-        border-bottom: 1px solid #eee; transition: 0.2s;
-    }
-    .ranking-item:last-child { border-bottom: none; }
-    .ranking-item:hover { background: #f9fafb; padding-right: 10px; }
-    .rank-bar-bg { flex: 1; height: 8px; background: #edf2f7; margin: 0 15px; border-radius: 4px; overflow: hidden; }
-    .rank-bar-fill { height: 100%; background: var(--primary); border-radius: 4px; }
-
-    /* Popups */
-    .overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-        display: flex; justify-content: center; align-items: center; z-index: 5000;
-        backdrop-filter: blur(4px); padding: 20px;
-    }
-    .popup {
-        background: white; width: 100%; max-width: 500px; border-radius: 16px;
-        padding: 25px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-        animation: slideUp 0.3s ease; max-height: 90vh; overflow-y: auto;
-    }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .popup-header { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 1.2rem; font-weight: bold; color: var(--dark); }
-    .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #a0aec0; }
-    
-    /* Edit List */
-    .edit-option { display: flex; justify-content: space-between; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; }
-    .edit-option:hover { background: #f7fafc; }
-    .edit-option input { width: 20px; height: 20px; accent-color: var(--primary); }
-
-    /* Stats Popup Detail Styles */
-    .detail-grid {
-        display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
-    }
-    .detail-box {
-        background: #f8fafc; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #edf2f7;
-    }
-    .detail-val { font-size: 1.4rem; font-weight: 800; color: var(--dark); }
-    .detail-lbl { font-size: 0.8rem; color: #718096; margin-top: 5px; }
-    .status-indicator {
-        padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 15px; font-weight: bold;
-    }
-    .is-active { background: #def7ec; color: #03543f; border: 1px solid #38ef7d; }
-    .is-inactive { background: #fed7d7; color: #9b2c2c; border: 1px solid #f56565; }
-
-    /* Toast Notification */
-    .toast {
-        position: fixed; bottom: 20px; right: 20px; background: var(--dark); color: white;
-        padding: 12px 24px; border-radius: 8px; z-index: 9999; font-weight: bold;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: none; animation: fadeIn 0.3s;
-    }
-    @keyframes fadeIn { from{ opacity:0; transform: translateY(10px);} to{ opacity:1; transform: translateY(0);} }
-
-    /* Responsive Adjustments */
-    @media (max-width: 1024px) {
-        .main-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 600px) {
-        .header { flex-direction: column; align-items: flex-start; padding: 15px; }
-        .header-badges { width: 100%; justify-content: space-between; margin-top: 10px; }
-        .comm-grid { grid-template-columns: 1fr; }
-        .table-controls { flex-direction: column; }
-        .btn-action, .search-box { width: 100%; }
-        .stat-value { font-size: 1.5rem; }
-        .grid-cards { grid-template-columns: 1fr 1fr; }
-    }
+:root {
+    --primary: #11998e;
+    --secondary: #38ef7d;
+    --danger: #eb3349;
+    --warning: #f6ad55;
+    --info: #63b3ed;
+    --dark: #1a202c;
+    --light: #f7fafc;
+    --card-bg: #ffffff;
+    --accent: #764ba2;
+    --shadow: 0 10px 15px -3px rgba(0,0,0,0.12), 0 4px 6px -2px rgba(0,0,0,0.07);
+}
+/* قاعدة عامة */
+*, *:before, *:after {margin:0;padding:0;box-sizing:border-box;font-family:"Cairo",sans-serif;outline:none;}
+body {background: #f0f2f5; color: var(--dark); min-height:100vh;padding-bottom:50px; font-size:14px;}
+/* شاشة القفل */
+#lock-screen {position:fixed;inset:0;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;justify-content:center; align-items:center;z-index:10000;padding:20px;}
+.lock-box {background:rgba(255,255,255,0.96);padding:40px;max-width:400px;width:100%;border-radius:24px;text-align:center;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);backdrop-filter:blur(10px);}
+.lock-box h2 {color:var(--primary);margin-bottom:10px;font-size:1.8rem;}
+.lock-input-group{position:relative;margin:20px 0;}
+.lock-box input {width:100%;padding:15px;border-radius:12px;border:2px solid #e2e8f0;font-size:1.1rem;text-align:center;transition:.3s;}
+.lock-box input:focus {border-color:var(--primary);}
+.lock-btn {width:100%;padding:15px;background:linear-gradient(90deg,var(--primary),var(--secondary));color:white;border:none;border-radius:12px;font-size:1.1rem;font-weight:bold;cursor:pointer;transition:transform .2s;}
+.lock-btn:active{transform:scale(0.98);}
+.hidden { display:none!important;}
+.container {max-width:1400px;margin:auto;padding:15px;}
+.header {display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;margin-bottom:25px;background:var(--card-bg);padding:20px;border-radius:16px;box-shadow:var(--shadow);}
+.header-title h1 {font-size:1.5rem;font-weight:900;background:linear-gradient(90deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.header-badges {display: flex; gap: 10px; align-items: center;}
+.badge {padding:6px 12px;border-radius:20px;font-size:0.85rem;font-weight:700;display:flex;align-items:center;gap:6px;}
+.badge-admin {background:#e2e8f0;color:var(--dark);}
+.badge-live {background:#def7ec;color:#03543f;}
+.dot {width:8px;height:8px;background:var(--secondary);border-radius:50%;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%{opacity:1;}50%{opacity:0.4;}100%{opacity:1;}}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;margin-bottom:30px;}
+.stat-card {background:var(--card-bg);padding:20px;border-radius:16px;box-shadow:var(--shadow);border-bottom:4px solid var(--primary);display: flex;flex-direction:column;justify-content:space-between;transition:transform .2s;}
+.stat-card:hover {transform:translateY(-5px);}
+.stat-title {color:#718096;font-size:0.85rem;font-weight:600;margin-bottom:5px;}
+.stat-value {font-size:1.8rem;font-weight:800;color:var(--dark);}
+.stat-sub{font-size:0.75rem;color:#a0aec0;}
+.main-grid{display:grid;grid-template-columns:2fr 1fr;gap:25px;margin-bottom:30px;}
+.panel{background:var(--card-bg);padding:20px;border-radius:16px;box-shadow:var(--shadow);height:100%;display:flex;flex-direction:column;}
+.panel h3{margin-bottom:15px;font-size:1.1rem;color:var(--primary);border-bottom:2px solid #f0f0f0;padding-bottom:10px;}
+canvas{width:100%!important;height:auto!important;max-height:300px;}
+.comm-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
+.comm-box {padding:15px;border-radius:12px;background:#f7fafc;border:1px solid #e2e8f0;cursor:pointer;transition:0.3s;}
+.comm-box:hover{background:var(--primary);color:white;border-color:var(--primary);}
+.comm-box h4{font-size:1rem;margin-bottom:5px;}
+.comm-stats{font-size:0.8rem;opacity:0.8;}
+.notify-area textarea {width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:12px;resize:none;height:80px;margin-bottom:10px;transition:.3s;}
+.notify-area textarea:focus {border-color:var(--primary);}
+.notify-options{display:flex;gap:15px;margin-bottom:10px;}
+.table-controls{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap;}
+.search-box {flex:1;padding:10px 15px;border-radius:10px; border:1px solid #cbd5e0;min-width:180px;}
+.btn-action{padding:10px 15px;border:none;border-radius:10px;cursor:pointer;color:white;font-weight:bold;font-size:0.85rem;transition:0.2s;display:inline-flex;align-items:center;justify-content:center;gap:5px;}
+.btn-blue{background:var(--info);}
+.btn-green{background:var(--secondary);}
+.btn-red{background:var(--danger);}
+.btn-action:hover{opacity:0.9;transform:translateY(-1px);}
+.table-wrap{overflow-x:auto;border-radius:12px;border:1px solid #e2e8f0;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;min-width:650px;}
+thead{background:#f7fafc;}
+th,td{padding:12px;text-align:right;border-bottom:1px solid #e2e8f0;font-size:0.92rem;}
+th{color:#4a5568;}
+tr:hover{background:#f8fff9;}
+.status-ok{color:var(--primary);font-weight:bold;background:#e6fffa;padding:4px 8px;border-radius:6px;white-space:nowrap;font-size:0.83rem;}
+.status-bad{color:var(--danger);font-weight:bold;background:#fff5f5;padding:4px 8px;border-radius:6px;white-space:nowrap;font-size:0.83rem;}
+.ranking-item {display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #eee;transition:0.2s;}
+.ranking-item:last-child{border-bottom:none;}
+.ranking-item:hover{background:#f9fafb;padding-right:10px;}
+.rank-bar-bg{flex:1;height:8px;background:#edf2f7;margin:0 15px;border-radius:4px;overflow:hidden;}
+.rank-bar-fill{height:100%;background:var(--primary);border-radius:4px;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;z-index:5000;backdrop-filter:blur(4px);padding:20px;}
+.popup{background:white;width:100%;max-width:500px;border-radius:16px;padding:25px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);animation:slideUp .3s ease;max-height:90vh;overflow-y:auto;}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.popup-header{display:flex;justify-content:space-between;margin-bottom:20px;font-size:1.25rem;font-weight:bold;color:var(--dark);}
+.close-btn{background:none;border:none;font-size:1.6rem;cursor:pointer;color:#a0aec0;}
+.edit-option{display:flex;justify-content:space-between;padding:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;cursor:pointer;}
+.edit-option input{width:20px;height:20px;accent-color:var(--primary);}
+.edit-option:hover{background:#f7fafc;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px;}
+.detail-box{background:#f8fafc;padding:15px;border-radius:12px;text-align:center;border:1px solid #edf2f7;}
+.detail-val{font-size:1.4rem;font-weight:800;color:var(--dark);}
+.detail-lbl{font-size:0.83rem;color:#718096;margin-top:5px;}
+.status-indicator{padding:10px;border-radius:8px;text-align:center;margin-bottom:15px;font-weight:bold;}
+.is-active{background:#def7ec;color:#03543f;border:1px solid #38ef7d;}
+.is-inactive{background:#fed7d7;color:#9b2c2c;border:1px solid #f56565;}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--dark);color:white;padding:12px 24px;border-radius:8px;z-index:9999;font-weight:bold;box-shadow:0 4px 6px rgba(0,0,0,0.1);display:none;animation:fadeIn 0.3s;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@media (max-width:1024px){.main-grid{grid-template-columns:1fr;}}
+@media (max-width:600px){
+    .header{flex-direction:column;align-items:flex-start;padding:15px;}
+    .header-badges{width:100%;justify-content:space-between;margin-top:10px;}
+    .comm-grid{grid-template-columns:1fr;}
+    .table-controls{flex-direction:column;}
+    .btn-action,.search-box{width:100%;}
+    .stat-value{font-size:1.16rem;}
+    .grid-cards{grid-template-columns:1fr 1fr;}
+}
 </style>
 </head>
 <body>
-
 <div id="lock-screen">
     <div class="lock-box">
         <h2>🔐 العزيزة كنترول</h2>
@@ -225,12 +116,10 @@
             <input type="password" id="lock-pass" placeholder="كلمة المرور">
         </div>
         <button class="lock-btn" onclick="unlockSystem()">تسجيل الدخول</button>
-        <div id="login-error" style="color: var(--danger); margin-top: 10px; display: none;">كلمة المرور خاطئة!</div>
+        <div id="login-error" style="color: var(--danger); margin-top: 10px; display:none;">كلمة المرور خاطئة!</div>
     </div>
 </div>
-
 <div id="dashboard" class="container hidden">
-    
     <div class="header">
         <div class="header-title">
             <h1>🏛️ لوحة إحصائيات العزيزة</h1>
@@ -241,82 +130,70 @@
             <div class="badge badge-admin" id="user-role">زائر</div>
         </div>
     </div>
-
     <div class="grid-cards">
-        <div class="stat-card">
-            <div class="stat-title">إجمالي الأصوات</div>
+        <div class="stat-card"><div class="stat-title">إجمالي الأصوات</div>
             <div class="stat-value" id="total-votes">0</div>
             <div class="stat-sub">في اللجنتين</div>
         </div>
-        
         <div class="stat-card" style="border-bottom-color: var(--info);">
             <div class="stat-title">أصوات آخر ساعة</div>
             <div class="stat-value" style="color:var(--info)" id="last-hour-votes">0</div>
             <div class="stat-sub">مؤشر الزخم</div>
         </div>
-
         <div class="stat-card" style="border-bottom-color: var(--warning);">
             <div class="stat-title">متوسط الدقيقة</div>
             <div class="stat-value" style="color:var(--warning)" id="avg-per-min">0</div>
             <div class="stat-sub">منذ بدء التصويت</div>
         </div>
-
         <div class="stat-card">
             <div class="stat-title">الأصوات الصحيحة</div>
             <div class="stat-value" style="color:var(--primary)" id="valid-votes">0</div>
             <div class="stat-sub">بنسبة <span id="valid-percent">0%</span></div>
         </div>
-        
         <div class="stat-card">
             <div class="stat-title">الأصوات الباطلة</div>
             <div class="stat-value" style="color:var(--danger)" id="invalid-votes">0</div>
             <div class="stat-sub">بنسبة <span id="invalid-percent">0%</span></div>
         </div>
     </div>
-
     <div class="main-grid">
-        
-        <div style="display: flex; flex-direction: column; gap: 25px;">
+        <div style="display:flex;flex-direction:column;gap:25px;">
             <div class="panel">
                 <h3>📊 تحليل المرشحين</h3>
-                <div style="position: relative; flex: 1; min-height: 250px;">
+                <div style="position:relative; flex:1;min-height:250px;">
                     <canvas id="barChart"></canvas>
                 </div>
             </div>
             <div class="panel">
                 <h3>📈 النشاط الزمني (بالدقيقة)</h3>
-                <div style="position: relative; flex: 1; min-height: 200px;">
+                <div style="position: relative; flex:1;min-height:200px;">
                     <canvas id="lineChart"></canvas>
                 </div>
             </div>
         </div>
-
-        <div style="display: flex; flex-direction: column; gap: 25px;">
+        <div style="display:flex;flex-direction:column;gap:25px;">
             <div class="panel">
                 <h3>🏢 حالة اللجان (اضغط للتفاصيل)</h3>
                 <div class="comm-grid">
-                    <div class="comm-box" onclick="showCommitteeDetails(24)">
-                        <h4>لجنة 24 (رجال)</h4>
+                    <div class="comm-box" onclick="showCommitteeDetails(24)"><h4>لجنة 24 (رجال)</h4>
                         <div class="comm-stats" id="comm-24-stats">جاري التحميل...</div>
                     </div>
-                    <div class="comm-box" onclick="showCommitteeDetails(25)">
-                        <h4>لجنة 25 (نساء)</h4>
+                    <div class="comm-box" onclick="showCommitteeDetails(25)"><h4>لجنة 25 (نساء)</h4>
                         <div class="comm-stats" id="comm-25-stats">جاري التحميل...</div>
                     </div>
                 </div>
             </div>
-
             <div class="panel" style="flex:1;">
                 <h3>🏆 ترتيب الصدارة</h3>
-                <div id="ranking-container" style="max-height: 400px; overflow-y: auto;"></div>
+                <div id="ranking-container" style="max-height:400px;overflow-y:auto;"></div>
             </div>
-
             <div class="panel">
                 <h3>📢 إرسال تنبيه</h3>
                 <div class="notify-area">
                     <div class="notify-options">
-                        <label><input type="radio" name="n-target" value="24" checked> رجال</label>
+                        <label><input type="radio" name="n-target" value="24"> رجال</label>
                         <label style="margin-right:10px;"><input type="radio" name="n-target" value="25"> نساء</label>
+                        <label><input type="radio" name="n-target" value="both" checked> للجنتين</label>
                     </div>
                     <textarea id="notify-msg" placeholder="اكتب رسالة لتظهر في شاشة التصويت..."></textarea>
                     <button class="btn-action btn-blue" style="width:100%" onclick="sendNotify()">إرسال التنبيه</button>
@@ -324,7 +201,6 @@
             </div>
         </div>
     </div>
-
     <div class="panel">
         <h3>📋 سجل الأصوات التفصيلي</h3>
         <div class="table-controls">
@@ -351,31 +227,27 @@
         </div>
     </div>
 </div>
-
 <div id="edit-popup" class="overlay hidden">
     <div class="popup">
         <div class="popup-header">
             <span>تعديل صوت</span>
             <button class="close-btn" onclick="closePopup('edit-popup')">&times;</button>
         </div>
-        <div style="margin-bottom:15px; font-weight:bold; color:var(--primary);" id="edit-voter-name"></div>
+        <div style="margin-bottom:15px;font-weight:bold;color:var(--primary);" id="edit-voter-name"></div>
         <div id="edit-options-list"></div>
-        <div style="display:flex; gap:10px; margin-top:20px;">
+        <div style="display:flex;gap:10px;margin-top:20px;">
             <button class="btn-action btn-green" style="flex:1" onclick="saveEditVote()">حفظ التعديلات</button>
             <button class="btn-action btn-red" onclick="deleteSingleVote()">حذف الصوت</button>
         </div>
     </div>
 </div>
-
 <div id="details-popup" class="overlay hidden">
     <div class="popup">
         <div class="popup-header">
             <span id="dt-title">تفاصيل اللجنة</span>
             <button class="close-btn" onclick="closePopup('details-popup')">&times;</button>
         </div>
-        
         <div id="dt-status" class="status-indicator"></div>
-
         <div class="detail-grid">
             <div class="detail-box">
                 <div class="detail-val" id="dt-total">0</div>
@@ -393,46 +265,39 @@
                 <div class="detail-val" id="dt-avg-hour">0</div>
                 <div class="detail-lbl">متوسط / ساعة</div>
             </div>
-            <div class="detail-box" style="grid-column: span 2;">
+            <div class="detail-box" style="grid-column:span 2;">
                 <div class="detail-val" id="dt-avg-min">0</div>
                 <div class="detail-lbl">متوسط / دقيقة</div>
             </div>
         </div>
-        
         <div style="margin-top:20px;">
              <button class="btn-action btn-blue" style="width:100%" onclick="filterTableFromPopup()">🔍 عرض جدول هذه اللجنة فقط</button>
         </div>
     </div>
 </div>
-
 <div id="toast" class="toast"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, onValue, set, update, remove, push } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
-
 const firebaseConfig = {
   apiKey: "AIzaSyBmgHAmoZKm2RRXg42KWdQHD4e5hAUtBbc",
   authDomain: "azizaonly-2ab60.firebaseapp.com",
   databaseURL: "https://azizaonly-2ab60-default-rtdb.firebaseio.com",
   projectId: "azizaonly-2ab60",
-  storageBucket: "azizaonly-2ab60.firebasestorage.app",
+  storageBucket: "azizaonly-2ab60.appspot.com",
   messagingSenderId: "447237336190",
   appId: "1:447237336190:web:eab8a2b524b0dcdd5a3c2f",
   measurementId: "G-3DYLFJC5YH"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
 const candidatesList = [
   "ايهاب العمده","محمد العتمانى","أحمد الحديدى","عادل الجيار",
   "احمد محمد محمد سمره","وليد تيسير الامير","كمال العيسوى","البدوى جميز",
   "احمد الريس","أحمد عوف","حسن الملهاط","عمرو محمد بحيرى",
   "السيد طمان","محمد دندن","مجدى الأمير"
 ];
-
 let allVotes = [];
 let currentFilter = 'all';
 let isAdmin = false;
@@ -443,32 +308,25 @@ let tempPopupCommittee = null; // لتخزين رقم اللجنة المفتو�
 window.unlockSystem = function() {
     const pass = document.getElementById('lock-pass').value;
     const err = document.getElementById('login-error');
-    
     if(pass === 'aziza100') {
-        isAdmin = false;
-        enterDashboard("مراقب");
+        isAdmin = false; enterDashboard("مراقب");
     } else if (pass === 'azizaadmin') {
-        isAdmin = true;
-        enterDashboard("مدير عام");
+        isAdmin = true; enterDashboard("مدير عام");
     } else {
         err.style.display = 'block';
     }
 }
-
 function enterDashboard(role) {
     document.getElementById('lock-screen').classList.add('hidden');
     document.getElementById('dashboard').classList.remove('hidden');
     document.getElementById('user-role').textContent = role;
-    
     if(isAdmin) {
         document.getElementById('btn-reset').classList.remove('hidden');
         document.querySelectorAll('.admin-col').forEach(el => el.classList.remove('hidden'));
     }
-    
     startDataListener();
     checkConnection();
 }
-
 function checkConnection() {
     const connectedRef = ref(db, ".info/connected");
     onValue(connectedRef, (snap) => {
@@ -485,7 +343,6 @@ function checkConnection() {
         }
     });
 }
-
 function startDataListener() {
     const votesRef = ref(db, 'votes/aziza');
     onValue(votesRef, (snapshot) => {
@@ -497,103 +354,69 @@ function startDataListener() {
             });
         }
         allVotes.sort((a, b) => b.timestamp - a.timestamp);
-        
         updateUI();
     });
 }
-
 function updateUI() {
-    updateStats();
-    updateCharts();
-    updateRanking();
-    updateCommitteeBoxes();
+    updateStats(); updateCharts(); updateRanking(); updateCommitteeBoxes();
     renderTable();
-    // إذا كانت نافذة التفاصيل مفتوحة، قم بتحديث بياناتها مباشرة
     if(!document.getElementById('details-popup').classList.contains('hidden') && tempPopupCommittee) {
         window.showCommitteeDetails(tempPopupCommittee);
     }
 }
-
 function updateStats() {
     const total = allVotes.length;
     const valid = allVotes.filter(v => v.vote_validity === "صحيح").length;
     const invalid = allVotes.filter(v => v.vote_validity === "باطل").length;
-    
     const oneHourAgo = Date.now() - (60 * 60 * 1000);
     const lastHourCount = allVotes.filter(v => v.timestamp > oneHourAgo).length;
-    
     let avgPerMin = 0;
     if (total > 0) {
         const firstVoteTime = allVotes[allVotes.length - 1].timestamp;
         const durationMinutes = (Date.now() - firstVoteTime) / 60000;
-        
         if (durationMinutes > 0) {
             avgPerMin = (total / durationMinutes).toFixed(2);
         } else {
              avgPerMin = total;
         }
     }
-
     document.getElementById('total-votes').textContent = total;
     document.getElementById('valid-votes').textContent = valid;
     document.getElementById('invalid-votes').textContent = invalid;
-    
     document.getElementById('last-hour-votes').textContent = lastHourCount;
     document.getElementById('avg-per-min').textContent = avgPerMin;
-    
     document.getElementById('valid-percent').textContent = total ? Math.round((valid/total)*100)+"%" : "0%";
     document.getElementById('invalid-percent').textContent = total ? Math.round((invalid/total)*100)+"%" : "0%";
 }
-
 function updateCommitteeBoxes() {
     const c24 = allVotes.filter(v => v.committee == 24);
     const c25 = allVotes.filter(v => v.committee == 25);
-    
     document.getElementById('comm-24-stats').textContent = `${c24.length} صوت (${c24.filter(v=>v.vote_validity=='صحيح').length} صحيح)`;
     document.getElementById('comm-25-stats').textContent = `${c25.length} صوت (${c25.filter(v=>v.vote_validity=='صحيح').length} صحيح)`;
 }
-
-// --- دالة عرض تفاصيل اللجنة الجديدة ---
 window.showCommitteeDetails = function(commId) {
     tempPopupCommittee = commId;
     const votes = allVotes.filter(v => v.committee == commId);
-    
     const total = votes.length;
     const valid = votes.filter(v => v.vote_validity === 'صحيح').length;
     const invalid = votes.filter(v => v.vote_validity === 'باطل').length;
-    
-    // حسابات الزمن
-    let avgHour = 0;
-    let avgMin = 0;
-    let isActive = false;
-
+    let avgHour = 0, avgMin = 0, isActive = false;
     if(total > 0) {
-        // المصفوفة مرتبة تنازلياً، آخر عنصر هو الأقدم
         const firstVoteTime = votes[votes.length - 1].timestamp;
         const lastVoteTime = votes[0].timestamp;
         const durationMs = Date.now() - firstVoteTime;
-        
-        // المتوسطات
         const hours = durationMs / (1000 * 60 * 60);
         const minutes = durationMs / (1000 * 60);
-        
         avgHour = hours > 0 ? (total / hours).toFixed(1) : total;
         avgMin = minutes > 0 ? (total / minutes).toFixed(2) : total;
-
-        // حالة النشاط: إذا دخل صوت في آخر ساعة
-        if(Date.now() - lastVoteTime < (60 * 60 * 1000)) {
-            isActive = true;
-        }
+        if(Date.now() - lastVoteTime < (60 * 60 * 1000)) { isActive = true;}
     }
-
-    // تعبئة البيانات في الـ Popup
     document.getElementById('dt-title').textContent = commId == 24 ? "تفاصيل لجنة 24 (رجال)" : "تفاصيل لجنة 25 (نساء)";
     document.getElementById('dt-total').textContent = total;
     document.getElementById('dt-valid').textContent = valid;
     document.getElementById('dt-invalid').textContent = invalid;
     document.getElementById('dt-avg-hour').textContent = avgHour;
     document.getElementById('dt-avg-min').textContent = avgMin;
-
     const statusEl = document.getElementById('dt-status');
     if(isActive) {
         statusEl.className = "status-indicator is-active";
@@ -602,174 +425,133 @@ window.showCommitteeDetails = function(commId) {
         statusEl.className = "status-indicator is-inactive";
         statusEl.textContent = "🔴 اللجنة غير نشطة (لم تستقبل أصوات منذ ساعة)";
     }
-
     document.getElementById('details-popup').classList.remove('hidden');
 }
-
 window.filterTableFromPopup = function() {
     if(tempPopupCommittee) {
         filterTableByCommittee(tempPopupCommittee);
         closePopup('details-popup');
     }
 }
-
 function updateRanking() {
     const container = document.getElementById('ranking-container');
     const counts = {};
-    
     candidatesList.forEach(c => counts[c] = 0);
-    
     allVotes.forEach(v => {
         if(v.selected && Array.isArray(v.selected)) {
-            v.selected.forEach(cand => {
-                if(counts[cand] !== undefined) counts[cand]++;
-            });
+            v.selected.forEach(cand => {if(counts[cand] !== undefined) counts[cand]++;});
         }
     });
-    
     const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
     const maxVal = sorted[0] ? sorted[0][1] : 1;
-
     let html = '';
     sorted.forEach(([name, count], index) => {
         const percent = maxVal > 0 ? (count / maxVal) * 100 : 0;
         const medal = index === 0 ? '🥇' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : `#${index+1}`));
-        
-        html += `
-        <div class="ranking-item">
-            <div style="width:40px; font-weight:bold; color:#718096;">${medal}</div>
-            <div style="width:140px; font-weight:bold; font-size:0.85rem;">${name}</div>
+        html += `<div class="ranking-item">
+            <div style="width:40px;font-weight:bold;color:#718096;">${medal}</div>
+            <div style="width:140px;font-weight:bold;font-size:0.85rem;">${name}</div>
             <div class="rank-bar-bg"><div class="rank-bar-fill" style="width:${percent}%"></div></div>
-            <div style="width:40px; text-align:left; font-weight:bold;">${count}</div>
+            <div style="width:40px;text-align:left;font-weight:bold;">${count}</div>
         </div>`;
     });
     container.innerHTML = html;
 }
-
 window.filterTableByCommittee = function(c) {
     currentFilter = c;
     renderTable();
     showToast(c === 'all' ? "عرض الكل" : `تم التصفية: لجنة ${c}`);
 }
-
 window.renderTable = function() {
     const tbody = document.getElementById('table-body');
     const search = document.getElementById('search-inp').value.toLowerCase();
-    
     let filtered = allVotes;
-    
-    if(currentFilter !== 'all') {
-        filtered = filtered.filter(v => v.committee == currentFilter);
-    }
-    
+    if(currentFilter !== 'all') filtered = filtered.filter(v => v.committee == currentFilter);
     if(search) {
         filtered = filtered.filter(v => 
             (v.name && v.name.toLowerCase().includes(search)) ||
             (v.selected && v.selected.join(" ").includes(search))
         );
     }
-
     let html = '';
     filtered.forEach((v, i) => {
         const statusClass = v.vote_validity === 'صحيح' ? 'status-ok' : 'status-bad';
         const time = new Date(v.timestamp).toLocaleTimeString('ar-EG');
         const cands = Array.isArray(v.selected) ? v.selected.join(" ، ") : "";
-        
-        const adminBtn = isAdmin ? 
-            `<button class="btn-action btn-blue" style="padding:5px 10px; font-size:0.7rem;" onclick="openEdit('${v.id}')">تعديل</button>` 
-            : '';
-
-        html += `
-        <tr>
+        const adminBtn = isAdmin ? `<button class="btn-action btn-blue" style="padding:5px 10px;font-size:0.7rem;" onclick="openEdit('${v.id}')">تعديل</button>` : '';
+        html += `<tr>
             <td>${filtered.length - i}</td>
             <td style="font-weight:bold;">${v.name || "بدون اسم"}</td>
             <td>${v.committee}</td>
-            <td style="font-size:0.85rem; color:#4a5568;">${cands}</td>
+            <td style="font-size:0.85rem;color:#4a5568;">${cands}</td>
             <td><span class="${statusClass}">${v.vote_validity}</span></td>
             <td style="direction:ltr;">${time}</td>
             <td class="${isAdmin ? '' : 'hidden'}">${adminBtn}</td>
         </tr>`;
     });
-    
     tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center; padding:20px;">لا توجد بيانات</td></tr>';
 }
-
 window.openEdit = function(id) {
     const vote = allVotes.find(v => v.id === id);
     if(!vote) return;
-    
     currentEditId = id;
     document.getElementById('edit-voter-name').textContent = `الناخب: ${vote.name}`;
     document.getElementById('edit-popup').classList.remove('hidden');
-    
     const container = document.getElementById('edit-options-list');
     let html = '';
     candidatesList.forEach(cand => {
         const checked = vote.selected && vote.selected.includes(cand) ? 'checked' : '';
-        html += `
-        <label class="edit-option">
-            <span>${cand}</span>
-            <input type="checkbox" value="${cand}" ${checked}>
-        </label>`;
+        html += `<label class="edit-option"><span>${cand}</span>
+            <input type="checkbox" value="${cand}" ${checked}></label>`;
     });
     container.innerHTML = html;
 }
-
 window.saveEditVote = function() {
     if(!currentEditId) return;
-    
     const checked = Array.from(document.querySelectorAll('#edit-options-list input:checked')).map(i => i.value);
     if(checked.length > 2) { showToast("خطأ: اختر مرشحين كحد أقصى"); return; }
-    
-    update(ref(db, `votes/aziza/${currentEditId}`), {
-        selected: checked
-    }).then(() => {
-        showToast("تم تعديل التصويت بنجاح");
-        closePopup('edit-popup');
-    });
+    update(ref(db, `votes/aziza/${currentEditId}`), {selected: checked})
+    .then(() => {showToast("تم تعديل التصويت بنجاح"); closePopup('edit-popup');});
 }
-
 window.deleteSingleVote = function() {
     if(!currentEditId || !confirm("هل أنت متأكد من حذف هذا الصوت نهائياً؟")) return;
     remove(ref(db, `votes/aziza/${currentEditId}`)).then(() => {
-        showToast("تم حذف الصوت");
-        closePopup('edit-popup');
+        showToast("تم حذف الصوت"); closePopup('edit-popup');
     });
 }
-
 window.resetAllData = function() {
     if(!confirm("تحذير خطير!\nسيتم مسح جميع الأصوات من قاعدة البيانات.\nهل أنت متأكد؟")) return;
     remove(ref(db, 'votes/aziza')).then(() => showToast("تم تصفير النظام بالكامل"));
 }
-
 window.sendNotify = function() {
-    const msg = document.getElementById('notify-msg').value;
+    const msg = document.getElementById('notify-msg').value.trim();
     const target = document.querySelector('input[name="n-target"]:checked').value;
-    
-    if(!msg.trim()) return showToast("اكتب رسالة أولاً");
-    
-    const notifRef = push(ref(db, `notifications/committee_${target}`));
-    set(notifRef, {
-        message: msg,
-        timestamp: Date.now(),
-        sender: "Admin Control"
-    }).then(() => {
-        showToast(`تم إرسال التنبيه للجنة ${target}`);
+    if(!msg) return showToast("اكتب رسالة أولاً");
+    let branches = [];
+    if(target === "both") branches = ["24","25"]; else branches = [target];
+    Promise.all(
+      branches.map(br => {
+        const notifRef = push(ref(db, `notifications/committee_${br}`));
+        return set(notifRef, {
+            message: msg,
+            timestamp: Date.now(),
+            sender: isAdmin ? "مدير الكنترول" : "مراقب"
+        });
+      })
+    ).then(() => {
+        showToast(`تم إرسال التنبيه إلى اللجنة ${branches.length === 2 ? "24 و 25" : branches[0]}`);
         document.getElementById('notify-msg').value = '';
     });
 }
-
 window.closePopup = function(id) { 
     document.getElementById(id).classList.add('hidden'); 
     if(id === 'details-popup') tempPopupCommittee = null;
 }
-
 window.showToast = function(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg; t.style.display = 'block';
     setTimeout(() => t.style.display = 'none', 3000);
 }
-
 window.exportExcel = function() {
     let csv = '\uFEFFID,الاسم,اللجنة,المرشحين,الحالة,الوقت\n'; 
     allVotes.forEach((v, i) => {
@@ -777,20 +559,16 @@ window.exportExcel = function() {
         const time = new Date(v.timestamp).toLocaleString();
         csv += `${i+1},"${v.name}",${v.committee},${cands},${v.vote_validity},"${time}"\n`;
     });
-    
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = "aziza_votes_report.csv";
     link.click();
 }
-
-// Chart Configuration
 function updateCharts() {
     const counts = candidatesList.map(c => {
         return allVotes.reduce((acc, v) => (v.selected && v.selected.includes(c)) ? acc + 1 : acc, 0);
     });
-    
     const ctxBar = document.getElementById('barChart').getContext('2d');
     if(charts.bar) charts.bar.destroy();
     charts.bar = new Chart(ctxBar, {
@@ -804,18 +582,15 @@ function updateCharts() {
                 borderRadius: 4
             }]
         },
-        options: { responsive: true, maintainAspectRatio: false }
+        options: { responsive: true, maintainAspectRatio:false }
     });
-
     const timeData = {};
     allVotes.forEach(v => {
-        const timeKey = new Date(v.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const timeKey = new Date(v.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
         timeData[timeKey] = (timeData[timeKey] || 0) + 1;
     });
-    
     const keys = Object.keys(timeData).reverse().slice(0, 20).reverse();
     const values = keys.map(k => timeData[k]);
-
     const ctxLine = document.getElementById('lineChart').getContext('2d');
     if(charts.line) charts.line.destroy();
     charts.line = new Chart(ctxLine, {
@@ -826,12 +601,12 @@ function updateCharts() {
                 label: 'نشاط التصويت',
                 data: values,
                 borderColor: '#38ef7d',
-                backgroundColor: 'rgba(56, 239, 125, 0.2)',
+                backgroundColor:'rgba(56,239,125,0.18)',
                 fill: true,
                 tension: 0.4
             }]
         },
-        options: { responsive: true, maintainAspectRatio: false }
+        options: { responsive: true, maintainAspectRatio:false }
     });
 }
 </script>
