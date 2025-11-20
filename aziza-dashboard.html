@@ -973,6 +973,7 @@ function checkConnection() {
     });
 }
 function startDataListener() {
+    // التعديل: قراءة البيانات من المسار الجديد votes/aziza/
     const votesRef = ref(db, 'votes/aziza');
     onValue(votesRef, (snapshot) => {
         const data = snapshot.val();
