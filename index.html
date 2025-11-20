@@ -7,30 +7,497 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Cairo",sans-serif;}
-body{
-    background:linear-gradient(135deg,#667eea,#764ba2);
-    min-height:100vh;display:flex;justify-content:center;align-items:center;
-    padding:15px;color:#333;
-}
-.hidden{display:none!important;}
-.container{
-    width:100%;max-width:800px;background:#fff;padding:30px;border-radius:20px;
-    box-shadow:0 20px 60px rgba(0,0,0,.3);animation:fade .5s ease;
-}
-@keyframes fade{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-
-#login-box{
-    position:fixed;top:0;left:0;width:100%;height:100%;
-    background:#fff;z-index:9999999;display:flex;justify-content:center;align-items:center;
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Cairo", sans-serif;
 }
 
-.committee-info{background:#f5f7ff;padding:15px;text-align:center;border-radius:12px;border-right:4px solid #667eea;margin-bottom:20px;}
-.candidate-list{margin-top:10px;background:#f8f9ff;border:2px solid #e0e7ff;border-radius:14px;max-height:50vh;overflow-y:auto;padding:10px;}
-.candidate-item{background:#fff;border:1px solid #e8ecff;padding:12px;border-radius:12px;margin-bottom:8px;display:flex;justify-content:space-between;cursor:pointer;}
-.candidate-item.selected{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;}
-.radio-item{padding:12px;border:2px solid #e0e7ff;border-radius:10px;cursor:pointer;text-align:center;}
-.radio-item.selected{background:#667eea;color:#fff;}
+/* خلفية عامة */
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.14) 0, transparent 55%),
+        radial-gradient(circle at bottom right, rgba(0,0,0,0.18) 0, transparent 60%),
+        linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 18px;
+    color: #181c32;
+}
+
+/* إخفاء */
+.hidden {
+    display: none !important;
+}
+
+/* الحاوية الأساسية */
+.container {
+    width: 100%;
+    max-width: 800px;
+    background: #ffffff;
+    padding: 38px 26px 28px 26px;
+    border-radius: 24px;
+    box-shadow:
+        0 18px 55px rgba(15, 23, 42, 0.32),
+        0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+    animation: fadeIn 0.7s cubic-bezier(.4, 0, .2, 1);
+    border: 1px solid rgba(226, 232, 255, 0.9);
+    position: relative;
+    overflow: hidden;
+}
+
+.container::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: -90px;
+    inset-block-start: -90px;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.18), transparent 70%);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+.container::after {
+    content: "";
+    position: absolute;
+    inset-inline-end: -110px;
+    inset-block-end: -110px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(118, 75, 162, 0.20), transparent 70%);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(18px) scale(.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* عنوان الترحيب */
+h2#welcome-title {
+    position: relative;
+    z-index: 1;
+    font-size: 2.1em;
+    font-weight: 900;
+    color: #4338ca;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+}
+
+h2#welcome-title::after {
+    content: "";
+    display: block;
+    width: 90px;
+    height: 4px;
+    border-radius: 999px;
+    margin: 8px auto 0;
+    background: linear-gradient(90deg, #667eea, #a855f7);
+}
+
+/* صندوق معلومات اللجنة */
+.committee-info {
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(90deg, #eef2ff 0%, #e0f2fe 100%);
+    padding: 14px 16px;
+    text-align: center;
+    border-radius: 16px;
+    border-right: 4px solid #4f46e5;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.09);
+}
+
+#committee-name-display {
+    font-size: 1.15em;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+#committee-address-display {
+    font-size: 0.95em;
+    color: #475569;
+}
+
+/* عناوين الحقول */
+label {
+    display: block;
+    position: relative;
+    z-index: 1;
+    color: #4b5563;
+    font-weight: 700;
+    margin-top: 18px;
+    margin-bottom: 6px;
+    font-size: 1.02em;
+}
+
+/* حقول الإدخال */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1.3px solid #cbd5f5;
+    background: #f9fafb;
+    margin-bottom: 4px;
+    font-size: 1.03em;
+    color: #111827;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+    color: #9ca3af;
+    font-size: 0.96em;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #6366f1;
+    background: #f5f3ff;
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.15);
+}
+
+/* قائمة المرشحين */
+.candidate-list {
+    position: relative;
+    z-index: 1;
+    margin-top: 6px;
+    background: #f3f4ff;
+    border: 1.5px solid #e0e7ff;
+    border-radius: 18px;
+    max-height: 46vh;
+    overflow-y: auto;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+}
+
+/* شريط التمرير */
+.candidate-list::-webkit-scrollbar {
+    width: 6px;
+}
+.candidate-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.candidate-list::-webkit-scrollbar-thumb {
+    background: #a5b4fc;
+    border-radius: 999px;
+}
+
+/* بطاقة المرشح */
+.candidate-item {
+    background: #ffffff;
+    border: 1.4px solid #e5e7ff;
+    padding: 11px 9px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 6px 15px rgba(148, 163, 255, 0.30);
+    font-size: 0.98em;
+    position: relative;
+    overflow: hidden;
+    transition: background .18s ease, color .18s ease, transform .1s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.candidate-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(79, 70, 229, 0.27);
+}
+
+.candidate-item.selected {
+    background: linear-gradient(115deg, #4f46e5, #7c3aed);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 10px 28px rgba(76, 81, 191, 0.52);
+}
+
+/* دائرة رقم المرشح */
+.num-circle {
+    width: 32px;
+    height: 32px;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 800;
+    font-size: 0.98em;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    flex-shrink: 0;
+    transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+
+.candidate-item.selected .num-circle {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    transform: scale(1.02);
+}
+
+/* الإيموجي */
+.candidate-item > div:last-child {
+    font-size: 1.3em;
+}
+
+/* إخفاء تشيك بوكس المرشح */
+.candidate-checkbox {
+    display: none;
+}
+
+/* مربع حالة الصوت */
+.sec-box {
+    position: relative;
+    z-index: 1;
+    background: #f8fafc;
+    border: 1.6px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 14px 14px 16px 14px;
+    margin-top: 20px;
+    box-shadow: 0 6px 18px rgba(148, 163, 184, 0.18);
+    font-size: 0.97em;
+    color: #0f172a;
+}
+
+.sec-box > span {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+/* أزرار الراديو */
+.radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.radio-item {
+    padding: 11px 10px;
+    border: 1.7px solid #d4d4ff;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 700;
+    color: #1f2933;
+    background: #ffffff;
+    box-shadow: 0 3px 12px rgba(148, 163, 255, 0.35);
+    transition: background .18s ease, color .18s ease, border-color .18s ease, transform .08s ease, box-shadow .18s ease;
+    font-size: 0.97em;
+}
+
+.radio-item:hover {
+    transform: translateY(-0.5px);
+    box-shadow: 0 6px 18px rgba(129, 140, 248, 0.6);
+}
+
+.radio-item.selected {
+    background: linear-gradient(120deg, #22c55e, #16a34a);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 9px 22px rgba(22, 163, 74, 0.5);
+}
+
+/* مجموعة الأزرار في أسفل الفورم */
+.button-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+    position: relative;
+    z-index: 1;
+}
+
+button {
+    font-family: "Cairo", sans-serif;
+}
+
+/* زر أساسي */
+.btn-primary,
+.btn-reset,
+.btn-logout {
+    flex: 1;
+    padding: 12px 10px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 800;
+    font-size: 0.96em;
+    cursor: pointer;
+    transition: background .15s ease, transform .08s ease, box-shadow .15s ease, color .15s ease;
+}
+
+/* تسجيل التصويت */
+.btn-primary {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: #ffffff;
+    box-shadow: 0 10px 24px rgba(76, 81, 191, 0.65);
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(76, 81, 191, 0.85);
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: wait;
+    box-shadow: none;
+}
+
+/* تفريغ */
+.btn-reset {
+    background: #e0f2fe;
+    color: #0369a1;
+    box-shadow: 0 6px 18px rgba(56, 189, 248, 0.50);
+}
+
+.btn-reset:hover {
+    transform: translateY(-1px);
+    background: #bae6fd;
+    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.5);
+}
+
+/* خروج */
+.btn-logout {
+    background: #fee2e2;
+    color: #b91c1c;
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
+}
+
+.btn-logout:hover {
+    transform: translateY(-1px);
+    background: #fecaca;
+    box-shadow: 0 8px 22px rgba(220, 38, 38, 0.7);
+}
+
+/* رسائل التحذير والتأكيد */
+#msg-warn,
+#msg-confirm {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 0.95em;
+}
+
+#msg-warn {
+    color: #b91c1c;
+}
+
+#msg-confirm {
+    color: #15803d;
+}
+
+/* شاشة كلمة السر */
+#login-box {
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at top, rgba(255,255,255,0.28), transparent 55%),
+        linear-gradient(135deg, #1d2671, #c33764);
+    z-index: 9999999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 18px;
+}
+
+.login-card {
+    background: rgba(15, 23, 42, 0.86);
+    padding: 26px 22px 20px 22px;
+    border-radius: 18px;
+    width: 90%;
+    max-width: 360px;
+    text-align: center;
+    color: #e5e7eb;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+.login-card h3 {
+    margin-bottom: 12px;
+    font-weight: 800;
+    font-size: 1.2em;
+}
+
+.login-card p {
+    font-size: 0.9em;
+    color: #cbd5f5;
+    margin-bottom: 10px;
+}
+
+/* مدخل كلمة السر داخل شاشة الدخول */
+.login-card input[type="password"] {
+    background: rgba(15, 23, 42, 0.9);
+    border-color: #4b5563;
+    color: #e5e7eb;
+}
+
+/* زر الدخول */
+#pass-btn {
+    width: 100%;
+    margin-top: 6px;
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    color: #ffffff;
+    border: none;
+    border-radius: 11px;
+    font-weight: 800;
+    padding: 12px;
+    cursor: pointer;
+    box-shadow: 0 10px 26px rgba(59, 130, 246, 0.7);
+}
+
+#pass-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 15px 30px rgba(59, 130, 246, 0.95);
+}
+
+#pass-error {
+    margin-top: 8px;
+    color: #fecaca;
+    font-size: 0.9em;
+}
+
+/* استجابة للشاشات الصغيرة */
+@media (max-width: 640px) {
+    .container {
+        padding: 26px 18px 20px 18px;
+        border-radius: 20px;
+    }
+    h2#welcome-title {
+        font-size: 1.6em;
+    }
+    .committee-info {
+        padding-inline: 10px;
+        font-size: 0.95em;
+    }
+    .candidate-list {
+        grid-template-columns: 1fr;
+        max-height: 52vh;
+    }
+    .button-row {
+        flex-direction: column;
+    }
+    .btn-primary,
+    .btn-reset,
+    .btn-logout {
+        width: 100%;
+    }
+}
 </style>
 </head>
 
@@ -38,14 +505,12 @@ body{
 
 <!-- شاشة كلمة السر -->
 <div id="login-box">
-  <div style="background:#f5f5f5;padding:30px;border-radius:15px;width:90%;max-width:350px;text-align:center;box-shadow:0 0 20px rgba(0,0,0,.2);">
-    <h3 style="margin-bottom:15px;">🔐 أدخل كلمة السر</h3>
-    <input id="pass-input" type="password" placeholder="*******"
-           style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;text-align:center;margin-bottom:15px;">
-    <button id="pass-btn" style="width:100%;padding:12px;background:#667eea;color:#fff;border:none;border-radius:10px;font-weight:bold;">
-      دخول
-    </button>
-    <p id="pass-error" style="color:red;margin-top:10px;display:none;"></p>
+  <div class="login-card">
+    <h3>🔐 أدخل كلمة السر</h3>
+    <p>مخصص لأفراد لجنة العزيزة فقط</p>
+    <input id="pass-input" type="password" placeholder="••••••••">
+    <button id="pass-btn">دخول</button>
+    <p id="pass-error" style="display:none;"></p>
   </div>
 </div>
 
@@ -64,22 +529,26 @@ body{
     <label>اختر المرشح (حد أقصى 2):</label>
     <div id="candidate-list" class="candidate-list"></div>
 
-    <div class="sec-box" style="background:#f5f7ff;border:2px solid #e0e7ff;border-radius:12px;padding:15px;margin-top:20px;">
+    <div class="sec-box">
         <span>حالة الصوت:</span>
-        <div class="radio-group" style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-            <label class="radio-item"><input type="radio" name="vvalid" value="صحيح" hidden> ✓ صحيح</label>
-            <label class="radio-item"><input type="radio" name="vvalid" value="باطل" hidden> ✗ باطل</label>
+        <div class="radio-group">
+            <label class="radio-item">
+              <input type="radio" name="vvalid" value="صحيح" hidden> ✓ صحيح
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="vvalid" value="باطل" hidden> ✗ باطل
+            </label>
         </div>
     </div>
 
-    <div style="display:flex;gap:10px;margin-top:20px;">
-      <button type="submit" class="btn-primary" style="flex:1;background:#667eea;color:#fff;border:none;padding:14px;border-radius:12px;">تسجيل التصويت</button>
-      <button type="reset" class="btn-reset" style="flex:1;background:#e0e7ff;color:#667eea;border:none;padding:14px;border-radius:12px;">تفريغ</button>
-      <button type="button" class="btn-logout" style="flex:1;background:#ffebee;color:#c62828;border:none;padding:14px;border-radius:12px;">خروج</button>
+    <div class="button-row">
+      <button type="submit" class="btn-primary">تسجيل التصويت</button>
+      <button type="reset" class="btn-reset">تفريغ</button>
+      <button type="button" class="btn-logout">خروج</button>
     </div>
 
-    <div id="msg-warn" style="display:none;color:red;text-align:center;margin-top:10px;"></div>
-    <div id="msg-confirm" style="display:none;color:green;text-align:center;margin-top:10px;"></div>
+    <div id="msg-warn" style="display:none;"></div>
+    <div id="msg-confirm" style="display:none;"></div>
   </form>
 </div>
 
@@ -90,10 +559,12 @@ document.getElementById("pass-btn").addEventListener("click", () => {
   const err = document.getElementById("pass-error");
 
   if (pass === "ma100124") {
+      // رجال -> لجنة 24
       localStorage.setItem("committee", "men");
       location.reload();
   }
   else if (pass === "wa100125") {
+      // نساء -> لجنة 25
       localStorage.setItem("committee", "women");
       location.reload();
   }
@@ -124,7 +595,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 
-// -------------------- قراءة اللجنة --------------------
+// -------------------- قراءة اللجنة من localStorage --------------------
 const committeeType = localStorage.getItem("committee");
 
 if (!committeeType) {
@@ -152,7 +623,7 @@ document.getElementById("welcome-title").textContent = "اللجنة رقم " + 
 document.getElementById("login-box").style.display = "none";
 document.getElementById("main-container").classList.remove("hidden");
 
-// -------------------- المرشحين --------------------
+// -------------------- المرشحون --------------------
 const candidates = [
   ["1","ايهاب العمده","👑"],["2","محمد العتمانى","🍞"],["3","أحمد الحديدى","🦁"],
   ["4","عادل الجيار","🦅"],["5","احمد محمد محمد سمره","💣"],["6","وليد تيسير الامير","🐊"],
@@ -163,74 +634,115 @@ const candidates = [
 
 const listBox = document.getElementById("candidate-list");
 
-candidates.forEach(c=>{
-  const item=document.createElement("div");
-  item.className="candidate-item";
-  const checkbox=document.createElement("input");
-  checkbox.type="checkbox";
-  checkbox.value=c[1];
-  checkbox.className="candidate-checkbox";
-  item.innerHTML=`<div style="display:flex;align-items:center;gap:10px;"><div class="num-circle">${c[0]}</div>${c[1]}</div><div style="font-size:1.5em;">${c[2]}</div>`;
+candidates.forEach(c => {
+  const item = document.createElement("div");
+  item.className = "candidate-item";
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.value = c[1];
+  checkbox.className = "candidate-checkbox";
+
+  item.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;">
+        <div class="num-circle">${c[0]}</div>
+        <span>${c[1]}</span>
+    </div>
+    <div>${c[2]}</div>
+  `;
+
   item.appendChild(checkbox);
-  item.addEventListener("click",(e)=>{if(e.target!==checkbox)checkbox.checked=!checkbox.checked;updateSelection();});
-  checkbox.addEventListener("change",updateSelection);
+
+  // الضغط على البطاقة
+  item.addEventListener("click", (e) => {
+      if (e.target !== checkbox) checkbox.checked = !checkbox.checked;
+      updateSelection();
+  });
+
+  // عند تغيير التشيك بوكس مباشرةً
+  checkbox.addEventListener("change", updateSelection);
+
   listBox.appendChild(item);
 });
 
 function updateSelection(){
-  const checked=document.querySelectorAll(".candidate-checkbox:checked");
-  if(checked.length>2){
-      checked[checked.length-1].checked=false;
+  const checked = document.querySelectorAll(".candidate-checkbox:checked");
+  if (checked.length > 2) {
+      checked[checked.length - 1].checked = false;
       showWarn("⚠️ يمكنك اختيار مرشحين فقط");
   }
-  document.querySelectorAll(".candidate-item").forEach(item=>{
-      const cb=item.querySelector("input");
-      item.classList.toggle("selected",cb.checked);
+  document.querySelectorAll(".candidate-item").forEach(item => {
+      const cb = item.querySelector("input");
+      item.classList.toggle("selected", cb.checked);
   });
 }
 
-document.querySelectorAll("input[name='vvalid']").forEach(r=>{
-  r.addEventListener("change",()=>{
-    document.querySelectorAll(".radio-item").forEach(x=>x.classList.remove("selected"));
+// تظليل حالة الصوت
+document.querySelectorAll("input[name='vvalid']").forEach(r => {
+  r.addEventListener("change", () => {
+    document.querySelectorAll(".radio-item").forEach(x => x.classList.remove("selected"));
     r.closest(".radio-item").classList.add("selected");
   });
 });
 
 // رسائل
-function showWarn(msg){const b=document.getElementById("msg-warn");b.textContent=msg;b.style.display="block";setTimeout(()=>b.style.display="none",2500);}
-function showConfirm(msg){const b=document.getElementById("msg-confirm");b.textContent=msg;b.style.display="block";setTimeout(()=>b.style.display="none",3000);}
+function showWarn(msg){
+  const b = document.getElementById("msg-warn");
+  b.textContent = msg;
+  b.style.display = "block";
+  setTimeout(() => b.style.display = "none", 2600);
+}
+
+function showConfirm(msg){
+  const b = document.getElementById("msg-confirm");
+  b.textContent = msg;
+  b.style.display = "block";
+  setTimeout(() => b.style.display = "none", 3000);
+}
 
 // حفظ التصويت
-document.getElementById("vote-form").addEventListener("submit",e=>{
+document.getElementById("vote-form").addEventListener("submit", e => {
   e.preventDefault();
 
-  let voterName=document.getElementById("voter-name").value.trim();
-  if(!voterName)voterName="بدون اسم";
+  let voterName = document.getElementById("voter-name").value.trim();
+  if (!voterName) voterName = "بدون اسم";
 
-  const selected=Array.from(document.querySelectorAll(".candidate-checkbox:checked")).map(x=>x.value);
-  const validity=document.querySelector("input[name='vvalid']:checked");
+  const selected = Array.from(
+      document.querySelectorAll(".candidate-checkbox:checked")
+  ).map(x => x.value);
 
-  if(selected.length<1)return showWarn("❗ اختر مرشح واحد على الأقل");
-  if(!validity)return showWarn("❗ اختر حالة الصوت");
+  const validity = document.querySelector("input[name='vvalid']:checked");
 
-  const btn=document.querySelector(".btn-primary");
-  btn.disabled=true;btn.textContent="جاري الحفظ...";
+  if (selected.length < 1) return showWarn("❗ اختر مرشح واحد على الأقل");
+  if (!validity) return showWarn("❗ اختر حالة الصوت");
 
-  const key=Date.now();
-  set(ref(db,"votes/aziza/"+key),{
-      name:voterName,
-      selected:selected,
-      vote_validity:validity.value,
-      committee:committeeNumber,
-      timestamp:key
+  const btn = document.querySelector(".btn-primary");
+  btn.disabled = true;
+  btn.textContent = "جاري الحفظ...";
+
+  const key = Date.now();
+  set(ref(db, "votes/aziza/" + key), {
+      name: voterName,
+      selected: selected,
+      vote_validity: validity.value,
+      committee: committeeNumber,
+      timestamp: key
   })
-  .then(()=>{showConfirm("✅ تم الحفظ بنجاح!");document.getElementById("vote-form").reset();})
-  .catch(err=>showWarn("❌ خطأ: "+err.message))
-  .finally(()=>{btn.disabled=false;btn.textContent="تسجيل التصويت";});
+  .then(() => {
+      showConfirm("✅ تم الحفظ بنجاح!");
+      document.getElementById("vote-form").reset();
+      document.querySelectorAll(".candidate-item").forEach(i => i.classList.remove("selected"));
+      document.querySelectorAll(".radio-item").forEach(i => i.classList.remove("selected"));
+  })
+  .catch(err => showWarn("❌ خطأ: " + err.message))
+  .finally(() => {
+      btn.disabled = false;
+      btn.textContent = "تسجيل التصويت";
+  });
 });
 
 // خروج
-document.querySelector(".btn-logout").addEventListener("click",()=>{
+document.querySelector(".btn-logout").addEventListener("click", () => {
   localStorage.removeItem("committee");
   location.reload();
 });
