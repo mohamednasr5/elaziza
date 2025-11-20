@@ -25,7 +25,7 @@
         color: var(--dark);
         min-height: 100vh;
         padding-bottom: 50px;
-        font-size: 14px; /* تحسين الحجم العام */
+        font-size: 14px;
     }
 
     /* --- Lock Screen --- */
@@ -83,10 +83,10 @@
     .dot { width: 8px; height: 8px; background: #38ef7d; border-radius: 50%; animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-    /* Stats Cards - تحسين التجاوب هنا */
+    /* Stats Cards */
     .grid-cards { 
         display: grid; 
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* تصغير الحجم الأدنى ليتناسب مع الموبايل */
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         gap: 15px; 
         margin-bottom: 30px; 
     }
@@ -137,7 +137,7 @@
     .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
 
     .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid #e2e8f0; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; min-width: 650px; } /* min-width لمنع انكماش الجدول */
+    table { width: 100%; border-collapse: collapse; min-width: 650px; }
     thead { background: #f7fafc; }
     th, td { padding: 12px; text-align: right; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; }
     th { color: #4a5568; white-space: nowrap; }
@@ -176,6 +176,21 @@
     .edit-option:hover { background: #f7fafc; }
     .edit-option input { width: 20px; height: 20px; accent-color: var(--primary); }
 
+    /* Stats Popup Detail Styles */
+    .detail-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+    }
+    .detail-box {
+        background: #f8fafc; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #edf2f7;
+    }
+    .detail-val { font-size: 1.4rem; font-weight: 800; color: var(--dark); }
+    .detail-lbl { font-size: 0.8rem; color: #718096; margin-top: 5px; }
+    .status-indicator {
+        padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 15px; font-weight: bold;
+    }
+    .is-active { background: #def7ec; color: #03543f; border: 1px solid #38ef7d; }
+    .is-inactive { background: #fed7d7; color: #9b2c2c; border: 1px solid #f56565; }
+
     /* Toast Notification */
     .toast {
         position: fixed; bottom: 20px; right: 20px; background: var(--dark); color: white;
@@ -196,7 +211,7 @@
         .table-controls { flex-direction: column; }
         .btn-action, .search-box { width: 100%; }
         .stat-value { font-size: 1.5rem; }
-        .grid-cards { grid-template-columns: 1fr 1fr; } /* بطاقتين في الصف على الموبايل */
+        .grid-cards { grid-template-columns: 1fr 1fr; }
     }
 </style>
 </head>
@@ -278,13 +293,13 @@
 
         <div style="display: flex; flex-direction: column; gap: 25px;">
             <div class="panel">
-                <h3>🏢 حالة اللجان</h3>
+                <h3>🏢 حالة اللجان (اضغط للتفاصيل)</h3>
                 <div class="comm-grid">
-                    <div class="comm-box" onclick="filterTableByCommittee(24)">
+                    <div class="comm-box" onclick="showCommitteeDetails(24)">
                         <h4>لجنة 24 (رجال)</h4>
                         <div class="comm-stats" id="comm-24-stats">جاري التحميل...</div>
                     </div>
-                    <div class="comm-box" onclick="filterTableByCommittee(25)">
+                    <div class="comm-box" onclick="showCommitteeDetails(25)">
                         <h4>لجنة 25 (نساء)</h4>
                         <div class="comm-stats" id="comm-25-stats">جاري التحميل...</div>
                     </div>
@@ -352,6 +367,44 @@
     </div>
 </div>
 
+<div id="details-popup" class="overlay hidden">
+    <div class="popup">
+        <div class="popup-header">
+            <span id="dt-title">تفاصيل اللجنة</span>
+            <button class="close-btn" onclick="closePopup('details-popup')">&times;</button>
+        </div>
+        
+        <div id="dt-status" class="status-indicator"></div>
+
+        <div class="detail-grid">
+            <div class="detail-box">
+                <div class="detail-val" id="dt-total">0</div>
+                <div class="detail-lbl">إجمالي الأصوات</div>
+            </div>
+            <div class="detail-box">
+                <div class="detail-val" style="color:var(--primary)" id="dt-valid">0</div>
+                <div class="detail-lbl">صحيحة</div>
+            </div>
+            <div class="detail-box">
+                <div class="detail-val" style="color:var(--danger)" id="dt-invalid">0</div>
+                <div class="detail-lbl">باطلة</div>
+            </div>
+            <div class="detail-box">
+                <div class="detail-val" id="dt-avg-hour">0</div>
+                <div class="detail-lbl">متوسط / ساعة</div>
+            </div>
+            <div class="detail-box" style="grid-column: span 2;">
+                <div class="detail-val" id="dt-avg-min">0</div>
+                <div class="detail-lbl">متوسط / دقيقة</div>
+            </div>
+        </div>
+        
+        <div style="margin-top:20px;">
+             <button class="btn-action btn-blue" style="width:100%" onclick="filterTableFromPopup()">🔍 عرض جدول هذه اللجنة فقط</button>
+        </div>
+    </div>
+</div>
+
 <div id="toast" class="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -385,6 +438,7 @@ let currentFilter = 'all';
 let isAdmin = false;
 let charts = { bar: null, line: null };
 let currentEditId = null;
+let tempPopupCommittee = null; // لتخزين رقم اللجنة المفتوحة حالياً
 
 window.unlockSystem = function() {
     const pass = document.getElementById('lock-pass').value;
@@ -454,6 +508,10 @@ function updateUI() {
     updateRanking();
     updateCommitteeBoxes();
     renderTable();
+    // إذا كانت نافذة التفاصيل مفتوحة، قم بتحديث بياناتها مباشرة
+    if(!document.getElementById('details-popup').classList.contains('hidden') && tempPopupCommittee) {
+        window.showCommitteeDetails(tempPopupCommittee);
+    }
 }
 
 function updateStats() {
@@ -461,21 +519,18 @@ function updateStats() {
     const valid = allVotes.filter(v => v.vote_validity === "صحيح").length;
     const invalid = allVotes.filter(v => v.vote_validity === "باطل").length;
     
-    // 1. حساب أصوات آخر ساعة
     const oneHourAgo = Date.now() - (60 * 60 * 1000);
     const lastHourCount = allVotes.filter(v => v.timestamp > oneHourAgo).length;
     
-    // 2. حساب متوسط الأصوات في الدقيقة (إجمالي)
     let avgPerMin = 0;
     if (total > 0) {
-        // بما أن المصفوفة مرتبة (الأحدث أولاً)، فإن آخر عنصر هو الأقدم
         const firstVoteTime = allVotes[allVotes.length - 1].timestamp;
-        const durationMinutes = (Date.now() - firstVoteTime) / 60000; // عدد الدقائق منذ البداية
+        const durationMinutes = (Date.now() - firstVoteTime) / 60000;
         
         if (durationMinutes > 0) {
-            avgPerMin = (total / durationMinutes).toFixed(2); // رقمين عشريين
+            avgPerMin = (total / durationMinutes).toFixed(2);
         } else {
-             avgPerMin = total; // إذا كان أقل من دقيقة
+             avgPerMin = total;
         }
     }
 
@@ -483,7 +538,6 @@ function updateStats() {
     document.getElementById('valid-votes').textContent = valid;
     document.getElementById('invalid-votes').textContent = invalid;
     
-    // تحديث العناصر الجديدة
     document.getElementById('last-hour-votes').textContent = lastHourCount;
     document.getElementById('avg-per-min').textContent = avgPerMin;
     
@@ -497,6 +551,66 @@ function updateCommitteeBoxes() {
     
     document.getElementById('comm-24-stats').textContent = `${c24.length} صوت (${c24.filter(v=>v.vote_validity=='صحيح').length} صحيح)`;
     document.getElementById('comm-25-stats').textContent = `${c25.length} صوت (${c25.filter(v=>v.vote_validity=='صحيح').length} صحيح)`;
+}
+
+// --- دالة عرض تفاصيل اللجنة الجديدة ---
+window.showCommitteeDetails = function(commId) {
+    tempPopupCommittee = commId;
+    const votes = allVotes.filter(v => v.committee == commId);
+    
+    const total = votes.length;
+    const valid = votes.filter(v => v.vote_validity === 'صحيح').length;
+    const invalid = votes.filter(v => v.vote_validity === 'باطل').length;
+    
+    // حسابات الزمن
+    let avgHour = 0;
+    let avgMin = 0;
+    let isActive = false;
+
+    if(total > 0) {
+        // المصفوفة مرتبة تنازلياً، آخر عنصر هو الأقدم
+        const firstVoteTime = votes[votes.length - 1].timestamp;
+        const lastVoteTime = votes[0].timestamp;
+        const durationMs = Date.now() - firstVoteTime;
+        
+        // المتوسطات
+        const hours = durationMs / (1000 * 60 * 60);
+        const minutes = durationMs / (1000 * 60);
+        
+        avgHour = hours > 0 ? (total / hours).toFixed(1) : total;
+        avgMin = minutes > 0 ? (total / minutes).toFixed(2) : total;
+
+        // حالة النشاط: إذا دخل صوت في آخر ساعة
+        if(Date.now() - lastVoteTime < (60 * 60 * 1000)) {
+            isActive = true;
+        }
+    }
+
+    // تعبئة البيانات في الـ Popup
+    document.getElementById('dt-title').textContent = commId == 24 ? "تفاصيل لجنة 24 (رجال)" : "تفاصيل لجنة 25 (نساء)";
+    document.getElementById('dt-total').textContent = total;
+    document.getElementById('dt-valid').textContent = valid;
+    document.getElementById('dt-invalid').textContent = invalid;
+    document.getElementById('dt-avg-hour').textContent = avgHour;
+    document.getElementById('dt-avg-min').textContent = avgMin;
+
+    const statusEl = document.getElementById('dt-status');
+    if(isActive) {
+        statusEl.className = "status-indicator is-active";
+        statusEl.textContent = "🟢 اللجنة نشطة (استقبلت أصوات في آخر ساعة)";
+    } else {
+        statusEl.className = "status-indicator is-inactive";
+        statusEl.textContent = "🔴 اللجنة غير نشطة (لم تستقبل أصوات منذ ساعة)";
+    }
+
+    document.getElementById('details-popup').classList.remove('hidden');
+}
+
+window.filterTableFromPopup = function() {
+    if(tempPopupCommittee) {
+        filterTableByCommittee(tempPopupCommittee);
+        closePopup('details-popup');
+    }
 }
 
 function updateRanking() {
@@ -645,7 +759,10 @@ window.sendNotify = function() {
     });
 }
 
-window.closePopup = function(id) { document.getElementById(id).classList.add('hidden'); }
+window.closePopup = function(id) { 
+    document.getElementById(id).classList.add('hidden'); 
+    if(id === 'details-popup') tempPopupCommittee = null;
+}
 
 window.showToast = function(msg) {
     const t = document.getElementById('toast');
