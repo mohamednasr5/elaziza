@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<title>تسجيل التصويت - العزيزة</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* --- Reset & Base Styles --- */
+* { 
+    margin: 0; padding: 0; box-sizing: border-box; 
+    font-family: "Cairo", sans-serif; 
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    color: #333;
+}
+
+.hidden { display: none !important; }
+
+/* --- Main Container --- */
+.container {
+    width: 100%;
+    max-width: 800px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+    animation: fade .5s ease;
+    margin: auto;
+}
+
+@keyframes fade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HEADER */
+h2 {
+    text-align: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2em;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.committee-info {
+    text-align: center;
+    margin-bottom: 20px;
+    background: #f5f7ff;
+    padding: 15px;
+    border-radius: 12px;
+    border-right: 4px solid #667eea;
+}
+
+.committee-name {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 5px;
+}
+
+.committee-address {
+    font-size: 0.9em;
+    color: #666;
+    font-weight: 500;
+}
+
+/* FORM ELEMENTS */
+label {
+    font-weight: 700;
+    color: #333;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+input[type=text] {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 2px solid #e0e7ff;
+    background: #f8f9ff;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+input[type=text]:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+/* CANDIDATES */
+.candidate-list {
+    margin-top: 10px;
+    background: #f8f9ff;
+    border: 2px solid #e0e7ff;
+    border-radius: 14px;
+    max-height: 50vh;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.candidate-item {
+    background: #fff;
+    border: 1px solid #e8ecff;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.candidate-item.selected {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+}
+
+.num-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e0e7ff;
+    color: #667eea;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* RADIO SECTION */
+.sec-box {
+    margin-top: 20px;
+    background: #f5f7ff;
+    border: 2px solid #e0e7ff;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.radio-item {
+    padding: 12px;
+    border: 2px solid #e0e7ff;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.radio-item.selected {
+    background: #667eea;
+    color: #fff;
+}
+
+/* BUTTONS */
+.btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button {
+    padding: 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    border: none;
+    flex: 1;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    color: #fff;
+}
+
+.btn-reset { background: #e0e7ff; color:#667eea; }
+.btn-logout { background: #ffebee; color:#c62828; }
+
+/* NOTIFICATION */
+#bubble {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background:#fff;
+    padding: 15px;
+    display:none;
+    border-radius:12px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.2);
+    z-index: 9999;
+    align-items: center;
+    gap: 10px;
+}
+
+#bubble-close {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    color: #999;
+    cursor: pointer;
+    flex: 0;
+    padding: 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="bubble">
+  <div id="bubble-icon">💬</div>
+  <div id="bubble-content"></div>
+  <button id="bubble-close">×</button>
+</div>
+
+<div class="container" id="main-container">
+
+  <h2 id="welcome-title">تسجيل التصويت - العزيزة</h2>
+
+  <div class="committee-info">
+    <div class="committee-name" id="committee-name-display">جاري التحميل...</div>
+    <div class="committee-address" id="committee-address-display">مدرسة مجمع العزيزة الابتدائية</div>
+  </div>
+
+  <form id="vote-form">
+
+    <label for="voter-name">اسم الناخب (اختياري):</label>
+    <input type="text" id="voter-name" placeholder="اكتب الاسم هنا...">
+
+    <label>اختر المرشح (حد أقصى 2):</label>
+    <div class="candidate-list" id="candidate-list"></div>
+
+    <div class="sec-box">
+        <span class="sec-title">حالة الصوت:</span>
+        <div class="radio-group">
+            <label class="radio-item">
+                <input type="radio" name="vvalid" value="صحيح" hidden>
+                ✓ صحيح
+            </label>
+            <label class="radio-item">
+                <input type="radio" name="vvalid" value="باطل" hidden>
+                ✗ باطل
+            </label>
+        </div>
+    </div>
+
+    <div class="btn-row">
+      <button type="submit" class="btn-primary">تسجيل التصويت</button>
+      <button type="reset" class="btn-reset">تفريغ</button>
+      <button type="button" class="btn-logout">خروج</button>
+    </div>
+
+    <div id="msg-warn" class="msg-warn" style="display:none; color:red; text-align:center; margin-top:10px;"></div>
+    <div id="msg-confirm" class="msg-confirm" style="display:none; color:green; text-align:center; margin-top:10px;"></div>
+
+  </form>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js";
+
+// إعداد Firebase الجديد
+const firebaseConfig = {
+  apiKey: "AIzaSyBmgHAmoZKm2RRXg42KWdQHD4e5hAUtBbc",
+  authDomain: "azizaonly-2ab60.firebaseapp.com",
+  databaseURL: "https://azizaonly-2ab60-default-rtdb.firebaseio.com",
+  projectId: "azizaonly-2ab60",
+  storageBucket: "azizaonly-2ab60.firebasestorage.app",
+  messagingSenderId: "447237336190",
+  appId: "1:447237336190:web:eab8a2b524b0dcdd5a3c2f",
+  measurementId: "G-3DYLFJC5YH"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const messaging = getMessaging(app);
+
+// VAPID KEY
+const VAPID_KEY = "BBc4i5tl6yb0Z584Vb5J4n-zHzSEMRZzW-Bh63PFkyJ5nkjx4-3qb3c_gn4BpwnN1ewUD47tx5UWedR06ulmW_o";
+
+// ----------- نظام اللجان ------------
+let committeeNumber = 0;
+let committeeName = "";
+
+// قراءة نوع اللجنة من الرابط
+const urlParams = new URLSearchParams(window.location.search);
+const committeeType = urlParams.get("type");
+
+// توجيه المستخدم إذا لم يكن هناك نوع لجنة
+if (!committeeType || (committeeType !== "women" && committeeType !== "men")) {
+  // يمكنك تغيير هذا الرابط للصفحة الرئيسية الخاصة بك
+  // window.location.href = "index.html"; 
+  console.log("No committee type selected");
+}
+
+if (committeeType === "women") {
+  committeeNumber = 24;
+  committeeName = "مجمع العزيزة - لجنة النساء";
+} else {
+  // الافتراضي رجال إذا لم يكن نساء
+  committeeNumber = 25;
+  committeeName = "مجمع العزيزة - لجنة الرجال";
+}
+
+// تحديث الواجهة
+document.getElementById("committee-name-display").textContent = committeeName;
+document.getElementById("welcome-title").textContent = "اللجنة رقم " + committeeNumber;
+
+// ------------------- نظام الإشعارات --------------------
+async function requestNotificationPermission() {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") return;
+
+    const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+    if (token) saveTokenToDatabase(token);
+  } catch (e) {
+    console.error("Notification Error:", e);
+  }
+}
+
+function saveTokenToDatabase(token) {
+  set(ref(db, `fcm_tokens/${committeeNumber}/${Date.now()}`), {
+    token,
+    committee: committeeNumber,
+    timestamp: Date.now(),
+  });
+}
+
+onMessage(messaging, (payload) => {
+  const title = payload.notification?.title || "إشعار";
+  const body = payload.notification?.body || "رسالة جديدة";
+  showFloatingNotification(body, title);
+});
+
+// تشغيل الاستماع للإشعارات
+setupNotificationListeners(committeeNumber);
+
+function setupNotificationListeners(committee) {
+  const allNotificationsRef = ref(db, "notifications/all");
+  let lastAll = 0;
+
+  onValue(allNotificationsRef, (snap) => {
+    const data = snap.val();
+    if (!data) return;
+
+    Object.values(data).forEach((notif) => {
+      if (notif.timestamp > lastAll) {
+        lastAll = notif.timestamp;
+        showFloatingNotification(notif.message, "📢 عام");
+      }
+    });
+  });
+
+  const commRef = ref(db, `notifications/committee_${committee}`);
+  let lastComm = 0;
+
+  onValue(commRef, (snap) => {
+    const data = snap.val();
+    if (!data) return;
+
+    Object.values(data).forEach((notif) => {
+      if (notif.timestamp > lastComm) {
+        lastComm = notif.timestamp;
+        showFloatingNotification(notif.message, "📩 لجنتك");
+      }
+    });
+  });
+}
+
+function showFloatingNotification(msg, type) {
+  const bubble = document.getElementById("bubble");
+  const icon = document.getElementById("bubble-icon");
+  const content = document.getElementById("bubble-content");
+
+  content.textContent = msg;
+
+  if (type.includes("عام")) {
+    bubble.style.borderRight = "4px solid #667eea";
+    icon.textContent = "📢";
+  } else if (type.includes("لجنتك")) {
+    bubble.style.borderRight = "4px solid #11998e";
+    icon.textContent = "📩";
+  } else {
+    bubble.style.borderRight = "4px solid #ffcc00";
+    icon.textContent = "💬";
+  }
+
+  bubble.style.display = "flex";
+
+  setTimeout(() => {
+    bubble.style.display = "none";
+  }, 10000);
+}
+
+// زر إغلاق الفقاعة
+document.getElementById("bubble-close").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("bubble").style.display = "none";
+});
+
+// زر الخروج
+document.querySelector(".btn-logout").addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+
+// ----------- قائمة المرشحين -------------
+const candidates = [
+  ["1", "ايهاب العمده", "👑"],
+  ["2", "محمد العتمانى", "🍞"],
+  ["3", "أحمد الحديدى", "🦁"],
+  ["4", "عادل الجيار", "🦅"],
+  ["5", "احمد محمد محمد سمره", "💣"],
+  ["6", "وليد تيسير الامير", "🐊"],
+  ["7", "كمال العيسوى", "🌀"],
+  ["8", "البدوى جميز", "🐋"],
+  ["9", "احمد الريس", "🦂"],
+  ["10", "أحمد عوف", "✋"],
+  ["11", "حسن الملهاط", "🌿"],
+  ["12", "عمرو محمد بحيرى", "🚌"],
+  ["13", "السيد طمان", "🔫"],
+  ["14", "محمد دندن", "🚁"],
+  ["15", "مجدى الأمير", "🖊"]
+];
+
+const listBox = document.getElementById("candidate-list");
+
+// توليد HTML لكل مرشح
+candidates.forEach((c) => {
+  const item = document.createElement("div");
+  item.className = "candidate-item";
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.value = c[1];
+  checkbox.className = "candidate-checkbox";
+
+  item.innerHTML = `
+      <div class="c-left" style="display:flex; align-items:center; gap:10px;">
+        <div class="num-circle">${c[0]}</div>
+        <div class="c-name" style="font-weight:bold;">${c[1]}</div>
+      </div>
+      <div class="c-right">
+        <span class="c-icon" style="font-size:1.5em;">${c[2]}</span>
+      </div>
+  `;
+
+  // إضافة الشيك بوكس
+  item.querySelector(".c-right").appendChild(checkbox);
+
+  // عند الضغط على العنصر بالكامل
+  item.addEventListener("click", (e) => {
+    if (e.target !== checkbox) {
+      checkbox.checked = !checkbox.checked;
+    }
+    updateSelection();
+  });
+
+  // عند الضغط مباشرة على الشيك بوكس
+  checkbox.addEventListener("change", updateSelection);
+
+  listBox.appendChild(item);
+});
+
+// ------------------ منع اختيار أكثر من 2 -------------------
+function updateSelection() {
+  const checked = document.querySelectorAll(".candidate-checkbox:checked");
+
+  if (checked.length > 2) {
+    // إلغاء تحديد آخر عنصر تم اختياره لضمان عدم تجاوز الحد
+    // هذه الطريقة بسيطة، قد تحتاج لتحسين إذا أردت إلغاء العنصر الحالي تحديداً
+    checked[checked.length - 1].checked = false;
+    showWarn("⚠️ يمكنك اختيار مرشحين فقط");
+  }
+
+  document.querySelectorAll(".candidate-item").forEach((item) => {
+    const cb = item.querySelector("input[type='checkbox']");
+    if (cb.checked) item.classList.add("selected");
+    else item.classList.remove("selected");
+  });
+}
+
+// ------------------ الراديو -------------------
+document
+  .querySelectorAll("input[name='vvalid']")
+  .forEach((radio) => {
+    radio.addEventListener("change", () => {
+      document
+        .querySelectorAll(".radio-item")
+        .forEach((x) => x.classList.remove("selected"));
+
+      radio.closest(".radio-item").classList.add("selected");
+    });
+  });
+
+// ------------------ الرسائل -------------------
+function showWarn(msg) {
+  const box = document.getElementById("msg-warn");
+  box.textContent = msg;
+  box.style.display = "block";
+  setTimeout(() => (box.style.display = "none"), 2500);
+}
+
+function showConfirm(msg) {
+  const box = document.getElementById("msg-confirm");
+  box.textContent = msg;
+  box.style.display = "block";
+  setTimeout(() => (box.style.display = "none"), 3000);
+}
+
+// ------------------ إرسال التصويت -------------------
+document.getElementById("vote-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  let voterName = document.getElementById("voter-name").value.trim();
+  if (!voterName) voterName = "بدون اسم";
+
+  const selected = Array.from(
+    document.querySelectorAll(".candidate-checkbox:checked")
+  ).map((x) => x.value);
+
+  const validity = document.querySelector("input[name='vvalid']:checked");
+
+  if (selected.length < 1) return showWarn("❗ اختر مرشح واحد على الأقل");
+  if (!validity) return showWarn("❗ اختر حالة الصوت");
+
+  const submitBtn = document.querySelector(".btn-primary");
+  submitBtn.disabled = true;
+  submitBtn.textContent = "جاري الحفظ...";
+
+  const key = Date.now();
+  const path = `votes/aziza/${key}`;
+  const voteRef = ref(db, path);
+
+  set(voteRef, {
+    name: voterName,
+    selected: selected,
+    vote_validity: validity.value,
+    committee: committeeNumber,
+    timestamp: key,
+  })
+    .then(() => {
+      showConfirm("✅ تم الحفظ بنجاح!");
+      document.getElementById("vote-form").reset();
+
+      // إعادة تنسيق العناصر
+      document
+        .querySelectorAll(".candidate-item")
+        .forEach((x) => x.classList.remove("selected"));
+      document
+        .querySelectorAll(".radio-item")
+        .forEach((x) => x.classList.remove("selected"));
+    })
+    .catch((err) => showWarn("❌ حدث خطأ: " + err.message))
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "تسجيل التصويت";
+    });
+});
+
+// ------------------ بدء الإشعارات -------------------
+requestNotificationPermission();
+
+</script>
+
+</body>
+</html>
