@@ -264,7 +264,7 @@ button {
     <div class="btn-row">
       <button type="submit" class="btn-primary">تسجيل التصويت</button>
       <button type="reset" class="btn-reset">تفريغ</button>
-      <button type="button" class="btn-logout">خروج</button>
+      <button type="button" class="btn-logout" onclick="window.location.href='index.html'">خروج</button>
     </div>
 
     <div id="msg-warn" class="msg-warn" style="display:none; color:red; text-align:center; margin-top:10px;"></div>
@@ -306,18 +306,10 @@ let committeeName = "";
 const urlParams = new URLSearchParams(window.location.search);
 const committeeType = urlParams.get("type");
 
-// توجيه المستخدم إذا لم يكن هناك نوع لجنة
-if (!committeeType || (committeeType !== "women" && committeeType !== "men")) {
-  // يمكنك تغيير هذا الرابط للصفحة الرئيسية الخاصة بك
-  // window.location.href = "index.html"; 
-  console.log("No committee type selected");
-}
-
 if (committeeType === "women") {
   committeeNumber = 24;
   committeeName = "مجمع العزيزة - لجنة النساء";
 } else {
-  // الافتراضي رجال إذا لم يكن نساء
   committeeNumber = 25;
   committeeName = "مجمع العزيزة - لجنة الرجال";
 }
@@ -419,11 +411,6 @@ document.getElementById("bubble-close").addEventListener("click", (e) => {
     document.getElementById("bubble").style.display = "none";
 });
 
-// زر الخروج
-document.querySelector(".btn-logout").addEventListener("click", () => {
-  window.location.href = "index.html";
-});
-
 // ----------- قائمة المرشحين -------------
 const candidates = [
   ["1", "ايهاب العمده", "👑"],
@@ -445,7 +432,6 @@ const candidates = [
 
 const listBox = document.getElementById("candidate-list");
 
-// توليد HTML لكل مرشح
 candidates.forEach((c) => {
   const item = document.createElement("div");
   item.className = "candidate-item";
@@ -465,10 +451,8 @@ candidates.forEach((c) => {
       </div>
   `;
 
-  // إضافة الشيك بوكس
   item.querySelector(".c-right").appendChild(checkbox);
 
-  // عند الضغط على العنصر بالكامل
   item.addEventListener("click", (e) => {
     if (e.target !== checkbox) {
       checkbox.checked = !checkbox.checked;
@@ -476,7 +460,6 @@ candidates.forEach((c) => {
     updateSelection();
   });
 
-  // عند الضغط مباشرة على الشيك بوكس
   checkbox.addEventListener("change", updateSelection);
 
   listBox.appendChild(item);
@@ -487,8 +470,6 @@ function updateSelection() {
   const checked = document.querySelectorAll(".candidate-checkbox:checked");
 
   if (checked.length > 2) {
-    // إلغاء تحديد آخر عنصر تم اختياره لضمان عدم تجاوز الحد
-    // هذه الطريقة بسيطة، قد تحتاج لتحسين إذا أردت إلغاء العنصر الحالي تحديداً
     checked[checked.length - 1].checked = false;
     showWarn("⚠️ يمكنك اختيار مرشحين فقط");
   }
@@ -563,7 +544,6 @@ document.getElementById("vote-form").addEventListener("submit", (e) => {
       showConfirm("✅ تم الحفظ بنجاح!");
       document.getElementById("vote-form").reset();
 
-      // إعادة تنسيق العناصر
       document
         .querySelectorAll(".candidate-item")
         .forEach((x) => x.classList.remove("selected"));
